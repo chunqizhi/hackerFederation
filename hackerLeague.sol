@@ -16,14 +16,12 @@ contract HackerLeague {
         bool isUser;
         buyInfo[] buyInfos;
     }
-    mapping(address => user) public users;
-
     // 记录用户算力购买情况
     struct buyInfo {
         uint256 timestamp;
         uint256 hashRate;
     }
-    //    mapping(address => buyInfo[]) buyInfos;
+    mapping(address => user) public users;
 
     // 用户算力购买情况事件
     event LogBuyHashRate(address owner, uint hashRate, address superior);
@@ -151,6 +149,17 @@ contract HackerLeague {
     }
 
     /**
+     * 获取用户的购买历史数据
+     *
+     * Requirements:
+     *
+     * - `_userAddress` 用户地址
+     */
+    function getUserBuyInfos(address _userAddress) public view returns (buyInfo[] memory) {
+        return users[_userAddress].buyInfos;
+    }
+
+    /**
      * 判断该地址是否为用户
      *
      * Requirements:
@@ -159,16 +168,5 @@ contract HackerLeague {
      */
     function isUser(address _userAddress) public view returns (bool) {
         return users[_userAddress].isUser;
-    }
-
-    /**
-     * 获取用户的购买历史数据
-     *
-     * Requirements:
-     *
-     * - `_userAddress` 用户地址
-     */
-    function getBuyInfo(address _userAddress) public view returns (buyInfo[] memory) {
-        return users[_userAddress].buyInfos;
     }
 }
