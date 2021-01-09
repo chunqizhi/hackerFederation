@@ -47,10 +47,9 @@ contract HackerLeague {
      *
      * - `_token` HE-1 或者 HE-3 的合约地址
      * - `_tokenAmount` 使用 token 数量购买算力
-     * - `_price` token 与 usdt 对应的价格，考虑小数点，需要协定 1 = 10000，0.03 = 300
      * - `_superior` 直接上级
      */
-    function buyHashRate(ERC20 _token,uint _amount, uint _price, address _superior) public {
+    function buyHashRate(ERC20 _token, uint _amount, address _superior) public {
         require(_superior != address(0), "Superior should not be 0");
         // 判断上级是否是 user 或 owner，如果都不是，抛出错误
         if (!(users[_superior].isUser || _superior == owner)) {
@@ -65,11 +64,10 @@ contract HackerLeague {
         bool sent = _token.transferFrom(msg.sender, owner, _amount);
         require(sent, "Token transfer failed");
 
-        // 计算_amount 等于多少 usdt
-        uint usdt = _amount * _price / 10000;
+
         // 10 USDT = 1T
         // 计算当前能买多少算力
-        uint hashRate = usdt / 10;
+        uint hashRate = _amount / 10;
         // 单次购买不的少于 1T 算力
         require(hashRate >= 1, "Need buy 1T least");
 
