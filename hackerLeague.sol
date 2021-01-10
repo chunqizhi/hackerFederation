@@ -23,6 +23,12 @@ contract HackerLeague {
     }
     mapping(address => user) public users;
 
+    // HE-3 的 USDT 价格，考虑到小数，统一扩大 10000 倍
+    // 如：
+    // HE-3 的 USDT 的价格为 0.03，则 HE3Price = 300
+    // HE-3 的 USDT 的价格为 0.01，则 HE3Price = 100
+    uint256 HE3Price;
+
     // 用户算力购买情况事件
     event LogBuyHashRate(address owner, uint hashRate, address superior);
     // 用户收益提取记录事件
@@ -166,5 +172,16 @@ contract HackerLeague {
      */
     function isUser(address _userAddress) public view returns (bool) {
         return users[_userAddress].isUser;
+    }
+
+    /**
+     * 每天凌晨 12 点设置当天的 HE-3 对 USDT 的价格
+     *
+     * Requirements:
+     *
+     * - `_price` 当天的 HE-3 对 USDT 的价格
+     */
+    function setHE3Price(uint256 _price) public onlyOwner {
+        HE3Price = _price;
     }
 }
