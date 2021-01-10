@@ -20,6 +20,7 @@ contract HackerLeague {
     struct buyInfo {
         uint256 timestamp;
         uint256 hashRate;
+        uint8 tokenName;
     }
     mapping(address => user) public users;
 
@@ -52,10 +53,11 @@ contract HackerLeague {
      * Requirements:
      *
      * - `_token` HE-1 或者 HE-3 的合约地址
+     * - `_tokenName` 使用 token 的名称，1 = HE-1, 3 = HE-3
      * - `_tokenAmount` 使用 token 数量购买算力
      * - `_superior` 直接上级
      */
-    function buyHashRate(ERC20 _token, uint _amount, address _superior) public {
+    function buyHashRate(ERC20 _tokenAddress, uint8 _tokenName, uint256 _tokenAmount, address _superior) public {
         require(_superior != address(0), "Superior should not be 0");
         // 判断上级是否是 user 或 owner，如果都不是，抛出错误
         if (!(users[_superior].isUser || _superior == owner)) {
@@ -64,16 +66,24 @@ contract HackerLeague {
 
         // 是否拥有 _amount 数量的 _token 代币
         require(
-            _token.allowance(msg.sender, address(this)) >= _amount,
+            _tokenAddress.allowance(msg.sender, address(this)) >= _tokenAmount,
             "Token allowance too low"
         );
-        bool sent = _token.transferFrom(msg.sender, owner, _amount);
+        bool sent = _tokenAddress.transferFrom(msg.sender, owner, _tokenAmount);
         require(sent, "Token transfer failed");
-
 
         // 10 USDT = 1T
         // 计算当前能买多少算力
-        uint hashRate = _amount / 10;
+        uint hashRate = _tokenAmount / 10;
+
+        // 如果是 HE-3 token
+        // 当前 HE-3 的 USDT 的价格为 0.01，则 HE3Price = 100
+        // _tokenAmount = 10000
+        // 则可以购买算力为 _tokenAmount / HE3Price / 10 = 10 T
+        if (_tokenName == 3) {
+            hashRate = _tokenAmount / HE3Price / 10;
+        }
+
         // 单次购买不的少于 1T 算力
         require(hashRate >= 1, "Need buy 1T least");
 
@@ -87,7 +97,7 @@ contract HackerLeague {
         }
 
         // 保存购买信息记录
-        users[msg.sender].buyInfos.push(buyInfo({timestamp:block.timestamp,hashRate: hashRate}));
+        users[msg.sender].buyInfos.push(buyInfo({timestamp:block.timestamp,hashRate: hashRate,tokenName:_tokenName}));
 
         // 触发事件
         emit LogBuyHashRate(msg.sender, hashRate, _superior);
@@ -102,15 +112,15 @@ contract HackerLeague {
      * - `_userAddress` 用户地址
      * - `_amount` HE-3 token 数量（手续费需用户支付，后端已经扣除等价的 HE-3）
      */
-    function withdraw(ERC20 _token, address _userAddress, uint _amount) public onlyOwner {
+    function withdraw(ERC20 _tokenAddress, address _userAddress, uint _amount) public onlyOwner {
         // 只能 owner 来调用
         // 保证 owner 地址允许该合约地址可以花费的 HE-3 token 大于等于 _amount
         require(
-            _token.allowance(msg.sender, address(this)) >= _amount,
+            _tokenAddress.allowance(msg.sender, address(this)) >= _amount,
             "Token allowance too low"
         );
 
-        bool sent = _token.transferFrom(msg.sender, _userAddress, _amount);
+        bool sent = _tokenAddress.transferFrom(msg.sender, _userAddress, _amount);
         require(sent, "Token transfer failed");
 
         // 触发事件
