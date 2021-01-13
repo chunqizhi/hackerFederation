@@ -24,9 +24,9 @@ contract HackerLeague {
     uint256 HE3Price;
 
     // 用户算力购买情况事件
-    event LogBuyHashRate(address owner, uint hashRate, address superior);
+    event LogBuyHashRate(address indexed owner, uint indexed hashRate, address indexed superior);
     // 用户收益提取记录事件
-    event LogWithdraw(address owner, uint reward);
+    event LogWithdraw(address indexed owner, uint indexed reward);
 
     constructor() public {
         //
