@@ -83,7 +83,7 @@ function userSuperior(address _userAddress) public view returns (address) {}
 ### 函数
 
 ```solidity
-function userSuperior(address _userAddress) public view returns (uint) {}
+function userHashRate(address _userAddress) public view returns (uint) {}
 ```
 
 ### 参数
@@ -103,7 +103,7 @@ function userSuperior(address _userAddress) public view returns (uint) {}
 ### 函数
 
 ```solidity
-function userSuperior(address _userAddress) public view returns (bool) {}
+function isUser(address _userAddress) public view returns (bool) {}
 ```
 
 ### 参数
