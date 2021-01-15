@@ -3,7 +3,10 @@ pragma solidity ^0.6.0;
 
 pragma experimental ABIEncoderV2;
 
-import "https://github.com/OpenZeppelin/openzeppelin-contracts/blob/v3.0.0/contracts/token/ERC20/ERC20.sol";
+import "https://github.com/chunqizhi/openzeppelin-contracts/blob/zcq/contracts/token/ERC20/ERC20.sol";
+import "https://github.com/chunqizhi/hackerLeague/blob/main/hackerLeagueOracle.sol";
+
+
 
 
 //用户推荐关系、算力购买、HE-3 代币释放和用户收益提取记录为去中心化
@@ -17,11 +20,9 @@ contract HackerLeague {
     }
     mapping(address => user) public users;
 
-    // HE-3 的 USDT 价格，考虑到小数，统一扩大 10000 倍
-    // 如：
-    // HE-3 的 USDT 的价格为 0.03，则 HE3Price = 300
-    // HE-3 的 USDT 的价格为 0.01，则 HE3Price = 100
-    uint256 HE3Price;
+    // 预言机地址
+    HackerLeagueOracle oracle = HackerLeagueOracle(0x5D4A64d636F4075Fc5C169617205E8Eb01B234DB);
+
 
     // 用户算力购买情况事件
     event LogBuyHashRate(address indexed owner, uint indexed hashRate, address indexed superior);
@@ -46,11 +47,10 @@ contract HackerLeague {
      * Requirements:
      *
      * - `_token` HE-1 或者 HE-3 的合约地址
-     * - `_tokenName` 使用 token 的名称，1 = HE-1, 3 = HE-3
      * - `_tokenAmount` 使用 token 数量购买算力
      * - `_superior` 直接上级
      */
-    function buyHashRate(ERC20 _tokenAddress, uint8 _tokenName, uint256 _tokenAmount, address _superior) public {
+    function buyHashRate(ERC20 _tokenAddress, uint256 _tokenAmount, address _superior) public {
         require(_superior != address(0), "Superior should not be 0");
         // 判断上级是否是 user 或 owner，如果都不是，抛出错误
         if (!(users[_superior].isUser || _superior == owner)) {
@@ -65,17 +65,11 @@ contract HackerLeague {
         bool sent = _tokenAddress.transferFrom(msg.sender, owner, _tokenAmount);
         require(sent, "Token transfer failed");
 
+        // 从预言机获取交易对价格
+        uint usdt = oracle.consult(address(_tokenAddress),_tokenAmount);
         // 10 USDT = 1T
         // 计算当前能买多少算力
-        uint hashRate = _tokenAmount / 10;
-
-        // 如果是 HE-3 token
-        // 当前 HE-3 的 USDT 的价格为 0.01，则 HE3Price = 100
-        // _tokenAmount = 10000
-        // 则可以购买算力为 _tokenAmount / HE3Price / 10 = 10 T
-        if (_tokenName == 3) {
-            hashRate = _tokenAmount / HE3Price / 10;
-        }
+        uint hashRate = usdt / 10;
 
         // 单次购买不的少于 1T 算力
         require(hashRate >= 1, "Need buy 1T least");
@@ -161,16 +155,5 @@ contract HackerLeague {
      */
     function isUser(address _userAddress) public view returns (bool) {
         return users[_userAddress].isUser;
-    }
-
-    /**
-     * 每天凌晨 12 点设置当天的 HE-3 对 USDT 的价格
-     *
-     * Requirements:
-     *
-     * - `_price` 当天的 HE-3 对 USDT 的价格
-     */
-    function setHE3Price(uint256 _price) public onlyOwner {
-        HE3Price = _price;
     }
 }
