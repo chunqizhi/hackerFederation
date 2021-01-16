@@ -18,14 +18,13 @@ function buyHashRate(ERC20 _tokenAddress, uint256 _tokenAmount, address _superio
 ### 函数
 
 ```solidity
-function withdraw(ERC20 _tokenAddress, address _userAddress, uint _amount) public onlyOwner {}
+function withdraw(address _userAddress, uint _amount) public onlyOwner {}
 ```
 
 ### 参数
 
-| _tokenAddress | HE-3 的合约地址                                              |
+| _userAddress | 用户地址                                              |
 | ------------- | ------------------------------------------------------------ |
-| _userAddress  | 用户地址                                                     |
 | _amount       | 提取 HE-3 的 token 数量（手续费需用户支付，后端已经扣除等价的 HE-3） |
 
 ## 获取用户信息
