@@ -13,3 +13,7 @@ hackerLeagueOracleDAIToUSDT.sol => DAI 对 USDT 预言机合约
 hackerLeagueOracleHE3ToDAI.sol => HE3 对 DAI 预言机合约
 
 hackerLeagueSUDTERC20.sol => USDT 代币合约
+
+hackerLeague.md => 骇客联盟业务合约接口文档
+
+hackerLeagueContractTest.doc => 整体测试文档
