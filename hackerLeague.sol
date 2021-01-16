@@ -22,18 +22,18 @@ contract HackerLeague {
 
     // 预言机地址
     // 获取 HE3/HE1 与 DAI 的交易对
-    HackerLeagueOracle oracleHEToDai = HackerLeagueOracle(0x296476F75251dac93D777f190A3cdA5fea6aEcd2);
+    HackerLeagueOracle private oracleHEToDai = HackerLeagueOracle(0x296476F75251dac93D777f190A3cdA5fea6aEcd2);
     // 获取 DAI 与 USDT 的交易对
-    HackerLeagueOracle oracleDaiToUsdt = HackerLeagueOracle(0xc714f612A2c113Cb8Ebaa2ebe064fd1D6C3B9CC0);
+    HackerLeagueOracle private oracleDaiToUsdt = HackerLeagueOracle(0xc714f612A2c113Cb8Ebaa2ebe064fd1D6C3B9CC0);
 
     // DAI erc20 代币地址
-    address public daiTokenAddress = 0x750fb8d4a158eA723f4C846a39602eA222261B54;
+    address private daiTokenAddress = 0x750fb8d4a158eA723f4C846a39602eA222261B54;
 
-    // HE1 代币地址
-    address public he1TokenAddress = 0x750fb8d4a158eA723f4C846a39602eA222261B54;
+    // HE1 erc20 代币地址
+    address private he1TokenAddress = 0x750fb8d4a158eA723f4C846a39602eA222261B54;
 
-    // HE3 代币地址
-    address public he3TokenAddress = 0x750fb8d4a158eA723f4C846a39602eA222261B54;
+    // HE3 erc20 代币地址
+    address private he3TokenAddress = 0x750fb8d4a158eA723f4C846a39602eA222261B54;
 
     // 用户算力购买情况事件
     event LogBuyHashRate(address indexed owner, uint indexed hashRate, address indexed superior);
