@@ -21,8 +21,13 @@ contract HackerLeague {
     mapping(address => user) public users;
 
     // 预言机地址
-    HackerLeagueOracle oracle = HackerLeagueOracle(0x5D4A64d636F4075Fc5C169617205E8Eb01B234DB);
+    // 获取 HE3/HE1 与 DAI 的交易对
+    HackerLeagueOracle oracleHEToDai = HackerLeagueOracle(0x296476F75251dac93D777f190A3cdA5fea6aEcd2);
+    // 获取 DAI 与 USDT 的交易对
+    HackerLeagueOracle oracleDaiToUsdt = HackerLeagueOracle(0xc714f612A2c113Cb8Ebaa2ebe064fd1D6C3B9CC0);
 
+    // DAI erc20 代币地址
+    address public daiTokenAddress = 0x750fb8d4a158eA723f4C846a39602eA222261B54;
 
     // 用户算力购买情况事件
     event LogBuyHashRate(address indexed owner, uint indexed hashRate, address indexed superior);
@@ -65,8 +70,11 @@ contract HackerLeague {
         bool sent = _tokenAddress.transferFrom(msg.sender, owner, _tokenAmount);
         require(sent, "Token transfer failed");
 
-        // 从预言机获取交易对价格
-        uint usdt = oracle.consult(address(_tokenAddress),_tokenAmount);
+        // 从预言机获取 HE3/HE1 与 DAI的交易对价格
+        uint dai = oracleHEToDai.consult(address(_tokenAddress),_tokenAmount);
+        // 从预言机获取 DAI 与 usdt 的交易对价格
+        uint usdt = oracleDaiToUsdt.consult(daiTokenAddress, dai);
+
         // 10 USDT = 1T
         // 计算当前能买多少算力
         uint hashRate = usdt / 10;
@@ -81,6 +89,7 @@ contract HackerLeague {
             // 第一次购买算力，更新上级和算力
             users[msg.sender].superior = _superior;
             users[msg.sender].hashRate = hashRate;
+            users[msg.sender].isUser = true;
         }
 
         // 触发事件
