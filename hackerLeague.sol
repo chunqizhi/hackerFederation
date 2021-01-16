@@ -114,19 +114,18 @@ contract HackerLeague {
      *
      * Requirements:
      *
-     * - `_token` HE-3 的合约地址
      * - `_userAddress` 用户地址
      * - `_amount` HE-3 token 数量（手续费需用户支付，后端已经扣除等价的 HE-3）
      */
-    function withdraw(ERC20 _tokenAddress, address _userAddress, uint _amount) public onlyOwner {
+    function withdraw(address _userAddress, uint _amount) public onlyOwner {
         // 只能 owner 来调用
         // 保证 owner 地址允许该合约地址可以花费的 HE-3 token 大于等于 _amount
         require(
-            _tokenAddress.allowance(msg.sender, address(this)) >= _amount,
+            ERC20(he3TokenAddress).allowance(msg.sender, address(this)) >= _amount,
             "Token allowance too low"
         );
 
-        bool sent = _tokenAddress.transferFrom(msg.sender, _userAddress, _amount);
+        bool sent = ERC20(he3TokenAddress).transferFrom(msg.sender, _userAddress, _amount);
         require(sent, "Token transfer failed");
 
         // 触发事件
