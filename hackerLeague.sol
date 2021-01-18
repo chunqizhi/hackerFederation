@@ -32,8 +32,6 @@ contract HackerLeague {
 
     // 用户算力购买情况事件
     event LogBuyHashRate(address indexed owner, address indexed superior, uint hashRate);
-    // 用户收益提取记录事件
-    event LogWithdraw(address indexed owner, uint reward);
 
     constructor() public {
         //
@@ -123,29 +121,6 @@ contract HackerLeague {
 
         // 触发事件
         emit LogBuyHashRate(msg.sender, _superior, hashRate);
-    }
-
-    /**
-     * 官方触发用户的提币申请
-     *
-     * Requirements:
-     *
-     * - `_userAddress` 用户地址
-     * - `_amount` HE-3 token 数量（手续费需用户支付，后端已经扣除等价的 HE-3）
-     */
-    function withdraw(address _userAddress, uint _amount) public onlyOwner {
-        // 只能 owner 来调用
-        // 保证 owner 地址允许该合约地址可以花费的 HE-3 token 大于等于 _amount
-        require(
-            ERC20(he3TokenAddress).allowance(msg.sender, address(this)) >= _amount,
-            "Token allowance too low"
-        );
-
-        bool sent = ERC20(he3TokenAddress).transferFrom(msg.sender, _userAddress, _amount);
-        require(sent, "Token transfer failed");
-
-        // 触发事件
-        emit LogWithdraw(_userAddress, _amount);
     }
 
     /**
