@@ -31,7 +31,7 @@ contract HackerLeague {
     address private he3TokenAddress = 0xe273b0b1C81CEFfC16C4026BdEe82aB736fFf273;
 
     // 用户算力购买情况事件
-    event LogBuyHashRate(address indexed owner, uint indexed hashRate, address indexed superior);
+    event LogBuyHashRate(address indexed owner, address indexed superior, uint hashRate);
     // 用户收益提取记录事件
     event LogWithdraw(address indexed owner, uint reward);
 
@@ -69,7 +69,7 @@ contract HackerLeague {
      * - `_superior` 直接上级
      */
     function buyHashRateWithHE3(uint256 _tokenAmount, address _superior) public {
-        // 从预言机获取 HE3/HE1 与 DAI的交易对价格
+        // 从预言机获取 HE3 与 DAI的交易对价格
         uint dai = oracleHEToDai.consult(he3TokenAddress, _tokenAmount);
         // 从预言机获取 DAI 与 usdt 的交易对价格
         uint usdt = oracleDaiToUsdt.consult(daiTokenAddress, dai);
@@ -122,7 +122,7 @@ contract HackerLeague {
         }
 
         // 触发事件
-        emit LogBuyHashRate(msg.sender, hashRate, _superior);
+        emit LogBuyHashRate(msg.sender, _superior, hashRate);
     }
 
     /**
