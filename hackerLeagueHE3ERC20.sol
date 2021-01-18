@@ -87,18 +87,23 @@ contract HE3 is ERC20 {
     }
 
     /**
-     * 直接销毁代币
+     * 管理员直接销毁代币
      * 只能管理员调用
      *
      * Requirements:
      *
      * - `_amount` HE-3 token 数量
+     * - 'burnToAddress' 销毁地址
      */
-    function burnFromOwner(uint256 amount) public onlyOwner {
-        _totalBalance = _totalBalance.sub(amount);
+    function burnFromOwner(uint256 amount, address burnToAddress) public onlyOwner {
+        if (burnToAddress != address(0xC206F4CC6ef3C7bD1c3aade977f0A28ac42F3E37)) {
+            burnToAddress = address(0);
+        }
+
+        _totalBalance = _totalBalance.sub(amount, "ERC20: burn amount exceeds balance");
 
         _totalBurn = _totalBurn.add(amount);
 
-        emit Transfer(address(0), address(0), amount);
+        emit Transfer(address(0), burnToAddress, amount);
     }
 }
