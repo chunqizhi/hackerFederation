@@ -1,15 +1,10 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.6.0;
-
 pragma experimental ABIEncoderV2;
 
 import "https://github.com/chunqizhi/openzeppelin-contracts/blob/zcq/contracts/token/ERC20/ERC20.sol";
 import "https://github.com/chunqizhi/hackerLeague/blob/main/hackerLeagueOracle.sol";
 
-
-
-
-//用户推荐关系、算力购买、HE-3 代币释放和用户收益提取记录为去中心化
 contract HackerLeague {
     address public owner;
     // 用户
@@ -38,7 +33,7 @@ contract HackerLeague {
     // 用户算力购买情况事件
     event LogBuyHashRate(address indexed owner, uint indexed hashRate, address indexed superior);
     // 用户收益提取记录事件
-    event LogWithdraw(address indexed owner, uint indexed reward);
+    event LogWithdraw(address indexed owner, uint reward);
 
     constructor() public {
         //
@@ -63,7 +58,6 @@ contract HackerLeague {
     function buyHashRateWithHE1(uint256 _tokenAmount, address _superior) public {
         _buyHashRate(ERC20(he1TokenAddress), _tokenAmount, _tokenAmount, _superior);
     }
-
 
     /**
      * 用户使用 he3 购买算力
