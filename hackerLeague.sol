@@ -22,18 +22,18 @@ contract HackerLeague {
 
     // 预言机地址
     // 获取 HE3/HE1 与 DAI 的交易对
-    HackerLeagueOracle private oracleHEToDai = HackerLeagueOracle(0x296476F75251dac93D777f190A3cdA5fea6aEcd2);
+    HackerLeagueOracle private oracleHEToDai = HackerLeagueOracle(0x8F287DB69B3c08Dc42187FF2bC566862B9f13Ee6);
     // 获取 DAI 与 USDT 的交易对
-    HackerLeagueOracle private oracleDaiToUsdt = HackerLeagueOracle(0xc714f612A2c113Cb8Ebaa2ebe064fd1D6C3B9CC0);
+    HackerLeagueOracle private oracleDaiToUsdt = HackerLeagueOracle(0xda96148fb87A62a6E8A95b946Cd92610ECf6A370);
 
     // DAI erc20 代币地址
-    address private daiTokenAddress = 0x750fb8d4a158eA723f4C846a39602eA222261B54;
+    address private daiTokenAddress = 0xAde61F17de209Eb1e94368641f28E4a866DD5e59;
 
     // HE1 erc20 代币地址
-    address private he1TokenAddress = 0x750fb8d4a158eA723f4C846a39602eA222261B54;
+    address private he1TokenAddress = 0x3ff4965Ab59b31eb0FaA3dfdB10A6d59165d6980;
 
     // HE3 erc20 代币地址
-    address private he3TokenAddress = 0x750fb8d4a158eA723f4C846a39602eA222261B54;
+    address private he3TokenAddress = 0xe273b0b1C81CEFfC16C4026BdEe82aB736fFf273;
 
     // 用户算力购买情况事件
     event LogBuyHashRate(address indexed owner, uint indexed hashRate, address indexed superior);
@@ -52,6 +52,38 @@ contract HackerLeague {
     }
 
     /**
+     * 用户使用 he1 购买算力
+     * 需要该用户拥有 HE-1 代币
+     *
+     * Requirements:
+     *
+     * - `_tokenAmount` 使用 token 数量购买算力
+     * - `_superior` 直接上级
+     */
+    function buyHashRateWithHE1(uint256 _tokenAmount, address _superior) public {
+        _buyHashRate(ERC20(he1TokenAddress), _tokenAmount, _tokenAmount, _superior);
+    }
+
+
+    /**
+     * 用户使用 he3 购买算力
+     * 需要该用户拥有 HE-3 代币
+     *
+     * Requirements:
+     *
+     * - `_tokenAmount` 使用 token 数量购买算力
+     * - `_superior` 直接上级
+     */
+    function buyHashRateWithHE3(uint256 _tokenAmount, address _superior) public {
+        // 从预言机获取 HE3/HE1 与 DAI的交易对价格
+        uint dai = oracleHEToDai.consult(he3TokenAddress, _tokenAmount);
+        // 从预言机获取 DAI 与 usdt 的交易对价格
+        uint usdt = oracleDaiToUsdt.consult(daiTokenAddress, dai);
+
+        _buyHashRate(ERC20(he3TokenAddress), _tokenAmount, usdt, _superior);
+    }
+
+    /**
      * 用户购买算力
      * 需要该用户拥有 HE-1 或者 HE-3 代币
      *
@@ -59,11 +91,10 @@ contract HackerLeague {
      *
      * - `_token` HE-1 或者 HE-3 的合约地址
      * - `_tokenAmount` 使用 token 数量购买算力
+     * - `_usdtAmount` _tokenAmount 与 usdt 的价格
      * - `_superior` 直接上级
      */
-    function buyHashRate(ERC20 _tokenAddress, uint256 _tokenAmount, address _superior) public {
-        // _tokenAddress = he1 或者 he3
-        require(he1TokenAddress == address(_tokenAddress) || he3TokenAddress == address(_tokenAddress), "Should be HE1 or HE3 ERC20 token address");
+    function _buyHashRate(ERC20 _tokenAddress,uint _tokenAmount, uint256 _usdtAmount, address _superior) internal {
 
         // 判断上级是否是 user 或 owner，如果都不是，抛出错误
         if (!(users[_superior].isUser || _superior == owner)) {
@@ -78,19 +109,10 @@ contract HackerLeague {
         bool sent = _tokenAddress.transferFrom(msg.sender, owner, _tokenAmount);
         require(sent, "Token transfer failed");
 
-        uint usdt = _tokenAmount;
-
-        // 如果是 he3，则需要通过预言机获取对应的 usdt 价格
-        if (address(_tokenAddress) == he3TokenAddress) {
-            // 从预言机获取 HE3/HE1 与 DAI的交易对价格
-            uint dai = oracleHEToDai.consult(address(_tokenAddress),_tokenAmount);
-            // 从预言机获取 DAI 与 usdt 的交易对价格
-            usdt = oracleDaiToUsdt.consult(daiTokenAddress, dai);
-        }
 
         // 10 USDT = 1T
         // 计算当前能买多少算力
-        uint hashRate = usdt / 10;
+        uint hashRate = _usdtAmount / 10;
 
         // 单次购买不的少于 1T 算力
         require(hashRate >= 1, "Need buy 1T least");
