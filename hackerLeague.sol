@@ -67,8 +67,12 @@ contract HackerLeague {
      * - `_superior` 直接上级
      */
     function buyHashRateWithHE3(uint256 _tokenAmount, address _superior) public {
+        //
+        oracleHEToDai.update();
         // 从预言机获取 HE3 与 DAI的交易对价格
         uint dai = oracleHEToDai.consult(he3TokenAddress, _tokenAmount);
+        //
+        oracleDaiToUsdt.update();
         // 从预言机获取 DAI 与 usdt 的交易对价格
         uint usdt = oracleDaiToUsdt.consult(daiTokenAddress, dai);
 
@@ -87,7 +91,6 @@ contract HackerLeague {
      * - `_superior` 直接上级
      */
     function _buyHashRate(ERC20 _tokenAddress,uint _tokenAmount, uint256 _usdtAmount, address _superior) internal {
-
         // 判断上级是否是 user 或 owner，如果都不是，抛出错误
         if (!(users[_superior].isUser || _superior == owner)) {
             require(users[_superior].isUser, "Superior should be a user or owner");
