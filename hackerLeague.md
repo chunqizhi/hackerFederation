@@ -28,20 +28,6 @@ function buyHashRateWithHE3(uint256 _tokenAmount, address _superior) public {}
 | uint256  | HE-3 的 token 数量 |
 | address  | 用户直接上级地址   |
 
-## 用户提取收益（管理者触发）
-
-### 函数
-
-```solidity
-function withdraw(address _userAddress, uint _amount) public onlyOwner {}
-```
-
-### 参数
-
-| 参数类型 | 参数说明                                          |
-| ------------- | ------------------------------------------------------------ |
-| address  | 用户地址 |
-| uint | 提取 HE-3 的 token 数量（手续费需用户支付，后端已经扣除等价的 HE-3） |
 
 ## 获取用户信息
 
@@ -137,11 +123,5 @@ function isUser(address _userAddress) public view returns (bool) {}
 
 ```solidity
 event LogBuyHashRate(address indexed owner, address indexed superior, uint hashRate)
-```
-
-## 用户收益提取记录事件
-
-```solidity
-event LogWithdraw(address indexed owner, uint reward)
 ```
 
