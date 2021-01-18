@@ -136,7 +136,7 @@ function isUser(address _userAddress) public view returns (bool) {}
 ## 用户算力购买情况事件
 
 ```solidity
-event LogBuyHashRate(address indexed owner, uint indexed hashRate, address indexed superior)
+event LogBuyHashRate(address indexed owner, address indexed superior, uint hashRate)
 ```
 
 ## 用户收益提取记录事件
