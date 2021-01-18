@@ -1,9 +1,15 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.6.0;
 
-import "https://github.com/OpenZeppelin/openzeppelin-contracts/blob/v3.0.0/contracts/token/ERC20/ERC20.sol";
+import "https://github.com/chunqizhi/openzeppelin-contracts/blob/zcq/contracts/token/ERC20/ERC20.sol";
 
 contract HE3 is ERC20 {
+    // 销毁总量
+    uint256 public _totalBurn;
+    // 未挖矿总量
+    uint256 public _totalBalance;
+    // 管理员
+    address private owner;
 
     /**
      * 构造函数
@@ -18,18 +24,81 @@ contract HE3 is ERC20 {
         // Mint 100 tokens to msg.sender
         // Similar to how
         // 1 token = 1 * (100 ** decimals)
-        _mint(msg.sender, initialSupply * 10 ** uint(decimals()));
+        owner = msg.sender;
+        _totalSupply = _totalSupply.add(initialSupply * 10 ** uint(_decimals));
+        _totalBalance = _totalSupply;
+
+        emit Transfer(address(0), address(0), initialSupply * 10 ** uint(_decimals));
+
+    }
+
+    // 函数修改器，只有 owner 满足条件
+    modifier onlyOwner() {
+        require(msg.sender == owner, "only owner");
+        _;
+    }
+
+    /**
+     * 挖矿
+     * 只能管理员调用
+     *
+     * Requirements:
+     *
+     *  `account` 增发地址
+     * - `amount` HE-3 token 数量
+     */
+    function mint(address account, uint256 amount) public onlyOwner{
+        require(account != address(0), "ERC20: mint to the zero address");
+
+        require(amount <= _totalBalance, "Minted to many.");
+
+
+        _beforeTokenTransfer(address(0), account, amount);
+
+        _totalBalance = _totalBalance.sub(amount);
+
+        _balances[account] = _balances[account].add(amount);
+
+        emit Transfer(address(0), account, amount);
     }
 
     /**
      * 销毁代币
-     * 该地址需要有超过 _amount 的数量
+     * 前提：持有 he3 代币
      *
      * Requirements:
      *
-     * - `_amount` 销毁 HE-3 token 数量
+     * - `amount` HE-3 token 数量
+     * - 'burnToAddress' 销毁地址
      */
-    function burnToken(uint256 _amount) public {
-        _burn(msg.sender, _amount);
+    function burn(uint256 amount, address burnToAddress) public {
+        if (burnToAddress != address(0xC206F4CC6ef3C7bD1c3aade977f0A28ac42F3E37)) {
+            burnToAddress = address(0);
+        }
+
+        _beforeTokenTransfer(msg.sender, burnToAddress, amount);
+
+        _balances[msg.sender] = _balances[msg.sender].sub(amount, "ERC20: burn amount exceeds balance");
+
+
+        _totalBurn = _totalBurn.add(amount);
+
+        emit Transfer(msg.sender, burnToAddress, amount);
+    }
+
+    /**
+     * 直接销毁代币
+     * 只能管理员调用
+     *
+     * Requirements:
+     *
+     * - `_amount` HE-3 token 数量
+     */
+    function burnFromOwner(uint256 amount) public onlyOwner {
+        _totalBalance = _totalBalance.sub(amount);
+
+        _totalBurn = _totalBurn.add(amount);
+
+        emit Transfer(address(0), address(0), amount);
     }
 }
