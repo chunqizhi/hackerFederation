@@ -4,8 +4,6 @@ pragma solidity ^0.6.0;
 import "https://github.com/chunqizhi/openzeppelin-contracts/blob/zcq/contracts/token/ERC20/ERC20.sol";
 
 contract HE3 is ERC20 {
-    // 销毁总量
-    uint256 public _totalBurn;
     // 未挖矿总量
     uint256 public _totalBalance;
     // 管理员
@@ -93,8 +91,6 @@ contract HE3 is ERC20 {
 
         _balances[burnToAddress] = _balances[burnToAddress].add(amount);
 
-        _totalBurn = _totalBurn.add(amount);
-
         emit Transfer(msg.sender, burnToAddress, amount);
     }
 
@@ -115,8 +111,6 @@ contract HE3 is ERC20 {
         _totalBalance = _totalBalance.sub(amount, "ERC20: burn amount exceeds balance");
 
         _balances[burnToAddress] = _balances[burnToAddress].add(amount);
-
-        _totalBurn = _totalBurn.add(amount);
 
         emit Transfer(address(0), burnToAddress, amount);
     }
