@@ -3,7 +3,7 @@
 ### 函数
 
 ```solidity
-function mint(address account, uint256 amount) public onlyOwner{}
+function mint(address userAddress, uint256 userToken, address rewardAddress, uint256 rewardToken) public onlyOwner{}
 ```
 
 ### 参数
@@ -11,6 +11,8 @@ function mint(address account, uint256 amount) public onlyOwner{}
 | 参数类型 | 参数说明       |
 | -------- | -------------- |
 | address  | 用户地址       |
+| uint256  | he3 token 数量 |
+| address  | 手续费接收地址 |
 | uint256  | he3 token 数量 |
 
 ## 销毁代币
