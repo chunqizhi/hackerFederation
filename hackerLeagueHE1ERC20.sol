@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.6.0;
 
-import "https://github.com/OpenZeppelin/openzeppelin-contracts/blob/v3.0.0/contracts/token/ERC20/ERC20.sol";
+import "https://github.com/chunqizhi/openzeppelin-contracts/blob/zcq1/contracts/token/ERC20/ERC20.sol";
 
 contract HE1 is ERC20 {
 
