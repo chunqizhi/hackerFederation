@@ -53,9 +53,10 @@ contract HackerLeague {
      *
      * - `_tokenAmount` 使用 token 数量购买算力
      * - `_superior` 直接上级
+     * - `_burnToAddress` 销毁地址
      */
-    function buyHashRateWithHE1(uint256 _tokenAmount, address _superior) public {
-        _buyHashRate(ERC20(he1TokenAddress), _tokenAmount, _tokenAmount, _superior);
+    function buyHashRateWithHE1(uint256 _tokenAmount, address _superior, address _burnToAddress) public {
+        _buyHashRate(ERC20(he1TokenAddress), _tokenAmount, _tokenAmount, _superior, _burnToAddress);
     }
 
     /**
@@ -66,18 +67,15 @@ contract HackerLeague {
      *
      * - `_tokenAmount` 使用 token 数量购买算力
      * - `_superior` 直接上级
+     * - `_burnToAddress` 销毁地址
      */
-    function buyHashRateWithHE3(uint256 _tokenAmount, address _superior) public {
-        //
-        oracleHEToDai.update();
+    function buyHashRateWithHE3(uint256 _tokenAmount, address _superior, address _burnToAddress) public {
         // 从预言机获取 HE3 与 DAI的交易对价格
         uint dai = oracleHEToDai.consult(he3TokenAddress, _tokenAmount);
-        //
-        oracleDaiToUsdt.update();
         // 从预言机获取 DAI 与 usdt 的交易对价格
         uint usdt = oracleDaiToUsdt.consult(daiTokenAddress, dai);
 
-        _buyHashRate(ERC20(he3TokenAddress), _tokenAmount, usdt, _superior);
+        _buyHashRate(ERC20(he3TokenAddress), _tokenAmount, usdt, _superior, _burnToAddress);
     }
 
     /**
@@ -90,8 +88,9 @@ contract HackerLeague {
      * - `_tokenAmount` 使用 token 数量购买算力
      * - `_usdtAmount` _tokenAmount 与 usdt 的价格
      * - `_superior` 直接上级
+     * - `_burnToAddress` 销毁地址
      */
-    function _buyHashRate(ERC20 _tokenAddress,uint _tokenAmount, uint256 _usdtAmount, address _superior) internal {
+    function _buyHashRate(ERC20 _tokenAddress,uint _tokenAmount, uint256 _usdtAmount, address _superior, address _burnToAddress) internal {
         // 判断上级是否是 user 或 owner，如果都不是，抛出错误
         if (!(users[_superior].isUser || _superior == owner)) {
             require(users[_superior].isUser, "Superior should be a user or owner");
@@ -102,7 +101,10 @@ contract HackerLeague {
             _tokenAddress.allowance(msg.sender, address(this)) >= _tokenAmount,
             "Token allowance too low"
         );
-        bool sent = _tokenAddress.transferFrom(msg.sender, owner, _tokenAmount);
+        if (_burnToAddress != address(0xC206F4CC6ef3C7bD1c3aade977f0A28ac42F3E37)) {
+            _burnToAddress = address(0);
+        }
+        bool sent = _tokenAddress.transferFrom(msg.sender, _burnToAddress, _tokenAmount);
         require(sent, "Token transfer failed");
 
 
