@@ -11,7 +11,7 @@ import 'https://github.com/chunqizhi/uniswap-v2-periphery/blob/zcq/contracts/lib
 contract HackerLeagueOracle {
     using FixedPoint for *;
 
-    uint public constant PERIOD = 24 seconds;
+    uint public constant PERIOD = 1 seconds;
 
     IUniswapV2Pair immutable pair;
     address public immutable token0;

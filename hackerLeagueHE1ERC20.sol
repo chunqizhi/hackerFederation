@@ -20,16 +20,4 @@ contract HE1 is ERC20 {
         // 1 token = 1 * (100 ** decimals)
         _mint(msg.sender, initialSupply * 10 ** uint(decimals()));
     }
-
-    /**
-     * 销毁代币
-     * 该地址需要有超过 _amount 的数量
-     *
-     * Requirements:
-     *
-     * - `_amount` 销毁 HE-3 token 数量
-     */
-    function burnToken(uint256 _amount) public {
-        _burn(msg.sender, _amount);
-    }
 }
