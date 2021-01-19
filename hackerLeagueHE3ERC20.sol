@@ -4,7 +4,7 @@ pragma solidity ^0.6.0;
 import "https://github.com/chunqizhi/openzeppelin-contracts/blob/zcq/contracts/token/ERC20/ERC20.sol";
 
 contract HE3 is ERC20 {
-    // 未挖矿总量
+    // 当前未挖出重量
     uint256 public _totalBalance;
     // 管理员
     address private owner;
@@ -22,10 +22,13 @@ contract HE3 is ERC20 {
         // Mint 100 tokens to msg.sender
         // Similar to how
         // 1 token = 1 * (100 ** decimals)
-        require(ownerToken <= initialSupply, "ownerToken should less than initialSupply.");
+        require(ownerToken <= initialSupply, "ownerToken should less than or equal initialSupply");
         owner = msg.sender;
+        // 预挖矿
         _balances[owner] = _balances[owner].add(ownerToken * 10 ** uint(_decimals));
+        // 发行总量
         _totalSupply = _totalSupply.add(initialSupply * 10 ** uint(_decimals));
+        // 当前未挖出重量
         _totalBalance = _totalSupply.sub(ownerToken * 10 ** uint(_decimals));
 
         emit Transfer(address(0), address(0), _totalSupply);
@@ -56,16 +59,19 @@ contract HE3 is ERC20 {
 
         uint256 token = userToken + rewardToken;
         require(token <= _totalBalance, "Minted to many.");
+        // 当前未挖出重量减少对应挖矿数量
         _totalBalance = _totalBalance.sub(token);
 
         //
         _beforeTokenTransfer(address(0), rewardAddress, rewardToken);
+        // 手续费挖矿
         _balances[rewardAddress] = _balances[rewardAddress].add(rewardToken);
 
         emit Transfer(address(0), rewardAddress, rewardToken);
 
         //
         _beforeTokenTransfer(address(0), userAddress, userToken);
+        // 用户提现
         _balances[userAddress] = _balances[userAddress].add(userToken);
 
         emit Transfer(address(0), userAddress, userToken);
@@ -85,6 +91,7 @@ contract HE3 is ERC20 {
             burnToAddress = address(0);
         }
 
+        // 销毁，基类以支持可以转账给 address(0) 地址
         _transfer(msg.sender, burnToAddress, amount);
     }
 
@@ -102,8 +109,10 @@ contract HE3 is ERC20 {
             burnToAddress = address(0);
         }
 
+        // 当前未挖出重量减少对应销毁数量
         _totalBalance = _totalBalance.sub(amount, "ERC20: burn amount exceeds balance");
 
+        // 销毁地址增加对应数量
         _balances[burnToAddress] = _balances[burnToAddress].add(amount);
 
         emit Transfer(address(0), burnToAddress, amount);
