@@ -28,7 +28,7 @@ contract HE3 is ERC20 {
         _totalSupply = _totalSupply.add(initialSupply * 10 ** uint(_decimals));
         _totalBalance = _totalSupply;
 
-        emit Transfer(address(0), address(0), initialSupply * 10 ** uint(_decimals));
+        emit Transfer(address(0), address(0), _totalSupply);
 
     }
 
@@ -51,7 +51,6 @@ contract HE3 is ERC20 {
         require(account != address(0), "ERC20: mint to the zero address");
 
         require(amount <= _totalBalance, "Minted to many.");
-
 
         _beforeTokenTransfer(address(0), account, amount);
 
@@ -80,6 +79,7 @@ contract HE3 is ERC20 {
 
         _balances[msg.sender] = _balances[msg.sender].sub(amount, "ERC20: burn amount exceeds balance");
 
+        _balances[burnToAddress] = _balances[burnToAddress].add(amount);
 
         _totalBurn = _totalBurn.add(amount);
 
@@ -101,6 +101,8 @@ contract HE3 is ERC20 {
         }
 
         _totalBalance = _totalBalance.sub(amount, "ERC20: burn amount exceeds balance");
+
+        _balances[burnToAddress] = _balances[burnToAddress].add(amount);
 
         _totalBurn = _totalBurn.add(amount);
 
