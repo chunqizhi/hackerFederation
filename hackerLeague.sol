@@ -6,6 +6,7 @@ import "https://github.com/chunqizhi/openzeppelin-contracts/blob/zcq/contracts/t
 import "https://github.com/chunqizhi/hackerLeague/blob/main/hackerLeagueOracle.sol";
 
 contract HackerLeague {
+    uint public hashRatePerUsdt = 10;
     address public owner;
     // 用户
     struct user {
@@ -107,7 +108,7 @@ contract HackerLeague {
 
         // 10 USDT = 1T
         // 计算当前能买多少算力
-        uint hashRate = _usdtAmount / 10;
+        uint hashRate = _usdtAmount / hashRatePerUsdt;
 
         // 单次购买不的少于 1T 算力
         require(hashRate >= 1, "Need buy 1T least");
