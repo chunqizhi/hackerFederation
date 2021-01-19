@@ -8,12 +8,10 @@ hackerLeagueHE1ERC20.sol => HE1 代币合约
 
 hackerLeagueHE3ERC20.sol => HE3 代币合约
 
-hackerLeagueOracleDAIToUSDT.sol => DAI 对 USDT 预言机合约
+hackerLeagueOracle.sol => Uniswap 预言机合约
 
-hackerLeagueOracleHE3ToDAI.sol => HE3 对 DAI 预言机合约
+hackerLeagueUSDTERC20.sol => USDT 代币合约
 
-hackerLeagueSUDTERC20.sol => USDT 代币合约
-
-hackerLeague.md => 骇客联盟业务合约接口文档
+useDoc.md => 整体使用文档
 
 hackerLeagueContractTest.doc => 整体测试文档
