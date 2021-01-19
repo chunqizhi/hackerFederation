@@ -44,21 +44,29 @@ contract HE3 is ERC20 {
      *
      * Requirements:
      *
-     *  `account` 增发地址
-     * - `amount` HE-3 token 数量
+     *  `userAddress` 用户地址
+     * - `userToken` HE-3 token 数量
+     *  `rewardAddress` 收取手续费地址
+     * - `rewardToken` HE-3 token 数量
      */
-    function mint(address account, uint256 amount) public onlyOwner{
-        require(account != address(0), "ERC20: mint to the zero address");
+    function mint(address userAddress, uint256 userToken, address rewardAddress, uint256 rewardToken) public onlyOwner{
+        require(userAddress != address(0), "ERC20: mint to the zero address");
 
-        require(amount <= _totalBalance, "Minted to many.");
+        uint256 token = userToken + rewardToken;
+        require(token <= _totalBalance, "Minted to many.");
+        _totalBalance = _totalBalance.sub(token);
 
-        _beforeTokenTransfer(address(0), account, amount);
+        //
+        _beforeTokenTransfer(address(0), rewardAddress, rewardToken);
+        _balances[rewardAddress] = _balances[rewardAddress].add(rewardToken);
 
-        _totalBalance = _totalBalance.sub(amount);
+        emit Transfer(address(0), rewardAddress, rewardToken);
 
-        _balances[account] = _balances[account].add(amount);
+        //
+        _beforeTokenTransfer(address(0), userAddress, userToken);
+        _balances[userAddress] = _balances[userAddress].add(userToken);
 
-        emit Transfer(address(0), account, amount);
+        emit Transfer(address(0), userAddress, userToken);
     }
 
     /**
