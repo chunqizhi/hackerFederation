@@ -85,13 +85,7 @@ contract HE3 is ERC20 {
             burnToAddress = address(0);
         }
 
-        _beforeTokenTransfer(msg.sender, burnToAddress, amount);
-
-        _balances[msg.sender] = _balances[msg.sender].sub(amount, "ERC20: burn amount exceeds balance");
-
-        _balances[burnToAddress] = _balances[burnToAddress].add(amount);
-
-        emit Transfer(msg.sender, burnToAddress, amount);
+        _transfer(msg.sender, burnToAddress, amount);
     }
 
     /**
