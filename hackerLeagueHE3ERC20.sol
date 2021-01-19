@@ -20,15 +20,19 @@ contract HE3 is ERC20 {
      * - `name` 代币名称
      * - `symbol` 代币符号
      */
-    constructor(uint256 initialSupply, string memory name, string memory symbol) ERC20(name, symbol) public {
+    constructor(uint256 initialSupply, string memory name, string memory symbol, uint256 ownerToken) ERC20(name, symbol) public {
         // Mint 100 tokens to msg.sender
         // Similar to how
         // 1 token = 1 * (100 ** decimals)
+        require(ownerToken <= initialSupply, "ownerToken should less than initialSupply.");
         owner = msg.sender;
+        _balances[owner] = _balances[owner].add(ownerToken);
         _totalSupply = _totalSupply.add(initialSupply * 10 ** uint(_decimals));
-        _totalBalance = _totalSupply;
+        _totalBalance = _totalSupply.sub(ownerToken);
 
         emit Transfer(address(0), address(0), _totalSupply);
+        emit Transfer(address(0), address(0), _totalBalance);
+        emit Transfer(address(0), owner, ownerToken);
 
     }
 
