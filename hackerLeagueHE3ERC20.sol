@@ -26,13 +26,13 @@ contract HE3 is ERC20 {
         // 1 token = 1 * (100 ** decimals)
         require(ownerToken <= initialSupply, "ownerToken should less than initialSupply.");
         owner = msg.sender;
-        _balances[owner] = _balances[owner].add(ownerToken);
+        _balances[owner] = _balances[owner].add(ownerToken * 10 ** uint(_decimals));
         _totalSupply = _totalSupply.add(initialSupply * 10 ** uint(_decimals));
-        _totalBalance = _totalSupply.sub(ownerToken);
+        _totalBalance = _totalSupply.sub(ownerToken * 10 ** uint(_decimals));
 
         emit Transfer(address(0), address(0), _totalSupply);
         emit Transfer(address(0), address(0), _totalBalance);
-        emit Transfer(address(0), owner, ownerToken);
+        emit Transfer(address(0), owner, ownerToken * 10 ** uint(_decimals));
 
     }
 
