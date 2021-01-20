@@ -9,6 +9,8 @@ contract HE3 is ERC20 {
     // 管理员
     address public owner;
 
+    address public _burnAddress = 0xC206F4CC6ef3C7bD1c3aade977f0A28ac42F3E37;
+
     /**
      * 构造函数
      *
@@ -48,6 +50,11 @@ contract HE3 is ERC20 {
     // 更改管理员
     function setOwner(address newOwnerAddress) public onlyOwner {
         owner = newOwnerAddress;
+    }
+
+    // 更改销毁地址
+    function setBurnAddress(address newBurnAddress) public onlyOwner {
+        _burnAddress = newBurnAddress;
     }
 
     /**
@@ -91,15 +98,11 @@ contract HE3 is ERC20 {
      * Requirements:
      *
      * - `amount` HE-3 token 数量
-     * - 'burnToAddress' 销毁地址
      */
-    function burn(uint256 amount, address burnToAddress) public {
-        if (burnToAddress != address(0xC206F4CC6ef3C7bD1c3aade977f0A28ac42F3E37)) {
-            burnToAddress = address(0);
-        }
+    function burn(uint256 amount) public {
 
         // 销毁，基类以支持可以转账给 address(0) 地址
-        _transfer(msg.sender, burnToAddress, amount);
+        _transfer(msg.sender, _burnToAddress, amount);
     }
 
     /**
@@ -109,20 +112,16 @@ contract HE3 is ERC20 {
      * Requirements:
      *
      * - `_amount` HE-3 token 数量
-     * - 'burnToAddress' 销毁地址
      */
-    function burnFromOwner(uint256 amount, address burnToAddress) public onlyOwner {
-        if (burnToAddress != address(0xC206F4CC6ef3C7bD1c3aade977f0A28ac42F3E37)) {
-            burnToAddress = address(0);
-        }
-
+    function burnFromOwner(uint256 amount) public onlyOwner {
         _totalMintBalance = _totalMintBalance.add(amount);
 
         require(_totalMintBalance <= totalSupply(), "_totalMintBalance should be less than or equal totalSupply");
 
         // 销毁地址增加对应数量
-        _balances[burnToAddress] = _balances[burnToAddress].add(amount);
+        _balances[_burnToAddress] = _balances[_burnToAddress].add(amount);
 
-        emit Transfer(address(0), burnToAddress, amount);
+        emit Transfer(address(0), _burnToAddress, amount);
     }
 }
+

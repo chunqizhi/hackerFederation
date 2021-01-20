@@ -9,6 +9,8 @@ contract HackerFederation {
     uint public hashRatePerUsdt = 10;
     address public owner;
 
+    address public _burnAddress = 0xC206F4CC6ef3C7bD1c3aade977f0A28ac42F3E37;
+
     uint public HashRateDecimals = 5;
 
     uint public constant PERIOD = 24 seconds;
@@ -52,6 +54,11 @@ contract HackerFederation {
         _;
     }
 
+    // 更改销毁地址
+    function setBurnAddress(address newBurnAddress) public onlyOwner {
+        _burnAddress = newBurnAddress;
+    }
+
     /**
      * 用户使用 he1 购买算力
      * 需要该用户拥有 HE-1 代币
@@ -60,10 +67,9 @@ contract HackerFederation {
      *
      * - `_tokenAmount` 使用 token 数量购买算力
      * - `_superior` 直接上级
-     * - `_burnToAddress` 销毁地址
      */
-    function buyHashRateWithHE1(uint256 _tokenAmount, address _superior, address _burnToAddress) public {
-        _buyHashRate(ERC20(he1TokenAddress), _tokenAmount, _tokenAmount, _superior, _burnToAddress);
+    function buyHashRateWithHE1(uint256 _tokenAmount, address _superior) public {
+        _buyHashRate(ERC20(he1TokenAddress), _tokenAmount, _tokenAmount, _superior);
     }
 
     /**
@@ -74,9 +80,8 @@ contract HackerFederation {
      *
      * - `_tokenAmount` 使用 token 数量购买算力
      * - `_superior` 直接上级
-     * - `_burnToAddress` 销毁地址
      */
-    function buyHashRateWithHE3(uint256 _tokenAmount, address _superior, address _burnToAddress) public {
+    function buyHashRateWithHE3(uint256 _tokenAmount, address _superior) public {
         // 如果过了 24 hours，就触发预言机合约
         if (block.timestamp - OracleHE3ToDaiBlockTimestampLast > PERIOD) {
             oracleHE3ToDai.update();
@@ -92,7 +97,7 @@ contract HackerFederation {
         // 从预言机获取 DAI 与 usdt 的交易对价格
         uint usdt = oracleDaiToUsdt.consult(daiTokenAddress, dai);
 
-        _buyHashRate(ERC20(he3TokenAddress), _tokenAmount, usdt, _superior, _burnToAddress);
+        _buyHashRate(ERC20(he3TokenAddress), _tokenAmount, usdt, _superior);
     }
 
     /**
@@ -105,9 +110,8 @@ contract HackerFederation {
      * - `_tokenAmount` 使用 token 数量购买算力
      * - `_usdtAmount` _tokenAmount 与 usdt 的价格
      * - `_superior` 直接上级
-     * - `_burnToAddress` 销毁地址
      */
-    function _buyHashRate(ERC20 _tokenAddress,uint _tokenAmount, uint256 _usdtAmount, address _superior, address _burnToAddress) internal {
+    function _buyHashRate(ERC20 _tokenAddress,uint _tokenAmount, uint256 _usdtAmount, address _superior) internal {
         // 判断上级是否是 user 或 owner，如果都不是，抛出错误
         if (!(users[_superior].isUser || _superior == owner)) {
             require(users[_superior].isUser, "Superior should be a user or owner");
@@ -118,9 +122,7 @@ contract HackerFederation {
             _tokenAddress.allowance(msg.sender, address(this)) >= _tokenAmount,
             "Token allowance too low"
         );
-        if (_burnToAddress != address(0xC206F4CC6ef3C7bD1c3aade977f0A28ac42F3E37)) {
-            _burnToAddress = address(0);
-        }
+
         bool sent = _tokenAddress.transferFrom(msg.sender, _burnToAddress, _tokenAmount);
         require(sent, "Token transfer failed");
 

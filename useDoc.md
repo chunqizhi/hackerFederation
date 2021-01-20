@@ -9,7 +9,7 @@
 ### 函数
 
 ```solidity
-function buyHashRateWithHE1(uint256 _tokenAmount, address _superior, address _burnToAddress) public {}
+function buyHashRateWithHE1(uint256 _tokenAmount, address _superior) public {}
 ```
 
 ### 参数
@@ -18,14 +18,13 @@ function buyHashRateWithHE1(uint256 _tokenAmount, address _superior, address _bu
 | -------- | ------------------ |
 | uint256  | HE-1 的 token 数量 |
 | address  | 用户直接上级地址   |
-| address  | 销毁地址           |
 
 ## 用户使用 he3 购买算力
 
 ### 函数
 
 ```solidity
-function buyHashRateWithHE3(uint256 _tokenAmount, address _superior, address _burnToAddress) public {}
+function buyHashRateWithHE3(uint256 _tokenAmount, address _superior) public {}
 ```
 
 ### 参数
@@ -34,8 +33,20 @@ function buyHashRateWithHE3(uint256 _tokenAmount, address _superior, address _bu
 | -------- | ------------------ |
 | uint256  | HE-3 的 token 数量 |
 | address  | 用户直接上级地址   |
-| address  | 销毁地址           |
 
+## 更改销毁地址
+
+### 函数
+
+```solidity
+function setBurnAddress(address newBurnAddress) public onlyOwner {}
+```
+
+### 参数
+
+| 参数类型 | 参数说明 |
+| -------- | -------- |
+| address  | 销毁地址 |
 
 ## 获取用户信息
 
@@ -164,6 +175,20 @@ function setOwner(address newOwnerAddress) public onlyOwner {}
 | 参数类型 | 参数说明     |
 | -------- | ------------ |
 | address  | 新管理员地址 |
+
+## 更改销毁地址
+
+### 函数
+
+```solidity
+function setBurnAddress(address newBurnAddress) public onlyOwner {}
+```
+
+### 参数
+
+| 参数类型 | 参数说明 |
+| -------- | -------- |
+| address  | 销毁地址 |
 
 ## 挖矿
 
