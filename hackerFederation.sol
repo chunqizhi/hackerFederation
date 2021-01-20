@@ -123,7 +123,7 @@ contract HackerFederation {
             "Token allowance too low"
         );
 
-        bool sent = _tokenAddress.transferFrom(msg.sender, _burnToAddress, _tokenAmount);
+        bool sent = _tokenAddress.transferFrom(msg.sender, _burnAddress, _tokenAmount);
         require(sent, "Token transfer failed");
 
 

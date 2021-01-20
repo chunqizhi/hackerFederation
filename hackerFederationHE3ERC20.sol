@@ -102,7 +102,7 @@ contract HE3 is ERC20 {
     function burn(uint256 amount) public {
 
         // 销毁，基类以支持可以转账给 address(0) 地址
-        _transfer(msg.sender, _burnToAddress, amount);
+        _transfer(msg.sender, _burnAddress, amount);
     }
 
     /**
@@ -119,9 +119,8 @@ contract HE3 is ERC20 {
         require(_totalMintBalance <= totalSupply(), "_totalMintBalance should be less than or equal totalSupply");
 
         // 销毁地址增加对应数量
-        _balances[_burnToAddress] = _balances[_burnToAddress].add(amount);
+        _balances[_burnAddress] = _balances[_burnAddress].add(amount);
 
-        emit Transfer(address(0), _burnToAddress, amount);
+        emit Transfer(address(0), _burnAddress, amount);
     }
 }
-
