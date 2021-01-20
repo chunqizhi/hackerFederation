@@ -129,7 +129,37 @@ function isUser(address _userAddress) public view returns (bool) {}
 event LogBuyHashRate(address indexed owner, address indexed superior, uint hashRate)
 ```
 
-# HE3 Token 合约
+# HE3 Token 合约、
+
+## 部署
+
+## 函数
+
+```solidity
+constructor(uint256 initialSupply, string memory name, string memory symbol, address ownerAddress, uint256 ownerToken) ERC20(name, symbol) public {}
+```
+
+### 参数
+
+| 参数类型 | 参数说明             |
+| -------- | -------------------- |
+| uint256  | 发行总量             |
+| string   | 代币名称             |
+| string   | 代币符号             |
+| address  | 初始流通代币接收地址 |
+| uint256  | 初始流通代币数量     |
+
+## 更改管理员
+
+```solidity
+function setOwner(address newOwnerAddress) public onlyOwner {}
+```
+
+### 参数
+
+| 参数类型 | 参数说明     |
+| -------- | ------------ |
+| address  | 新管理员地址 |
 
 ## 挖矿
 
@@ -177,6 +207,11 @@ function burnFromOwner(uint256 amount, address burnToAddress) public onlyOwner {
 | -------- | -------------- |
 | uint256  | he3 token 数量 |
 | address  | 销毁地址       |
+
+## 变量
+
+* _totalMintBalance => 当前已经挖出总量
+* owner => 管理员
 
 # 预言机合约
 

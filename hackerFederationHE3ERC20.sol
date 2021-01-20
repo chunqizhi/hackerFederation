@@ -45,7 +45,7 @@ contract HE3 is ERC20 {
         _;
     }
 
-    // 更新管理员
+    // 更改管理员
     function setOwner(address newOwnerAddress) public onlyOwner {
         owner = newOwnerAddress;
     }
