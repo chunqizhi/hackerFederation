@@ -13,7 +13,9 @@ contract HackerFederation {
 
     uint public HashRateDecimals = 5;
 
-    uint public constant PERIOD = 24 seconds;
+    uint public constant PERIOD = 1 minutes;
+
+    uint public UsdtPerHE3;
     // 用户
     struct user {
         address superior;
@@ -24,21 +26,21 @@ contract HackerFederation {
 
     // 预言机地址
     // 获取 HE3/HE1 与 DAI 的交易对
-    HackerFederationOracle private oracleHE3ToDai = HackerFederationOracle(0x8F287DB69B3c08Dc42187FF2bC566862B9f13Ee6);
+    HackerFederationOracle private oracleHE3ToDai = HackerFederationOracle(0x9972B152Fff6e43C4eFe82C8F01a5404446dad9c);
     // 获取 DAI 与 USDT 的交易对
-    HackerFederationOracle private oracleDaiToUsdt = HackerFederationOracle(0xda96148fb87A62a6E8A95b946Cd92610ECf6A370);
+    HackerFederationOracle private oracleDaiToUsdt = HackerFederationOracle(0x2d9E0b536231151fbf27e1899b2102d075ABf59F);
 
     uint  public OracleHE3ToDaiBlockTimestampLast = oracleHE3ToDai.blockTimestampLast();
     uint  public OracleDaiToUsdtBlockTimestampLast = oracleDaiToUsdt.blockTimestampLast();
 
     // DAI erc20 代币地址
-    address private daiTokenAddress = 0xAde61F17de209Eb1e94368641f28E4a866DD5e59;
+    address private daiTokenAddress = 0xBB4061a623ad68983bd0FdDE70a096Ea659aBEaa;
 
     // HE1 erc20 代币地址
-    address private he1TokenAddress = 0x3ff4965Ab59b31eb0FaA3dfdB10A6d59165d6980;
+    address private he1TokenAddress = 0x37153D7cD83baEfCC5DAFE7E91E755B4B33D2C40;
 
     // HE3 erc20 代币地址
-    address private he3TokenAddress = 0xe273b0b1C81CEFfC16C4026BdEe82aB736fFf273;
+    address private he3TokenAddress = 0xa00be484dF1A4914B20D1042A67990584b8Df57D;
 
     // 用户算力购买情况事件
     event LogBuyHashRate(address indexed owner, address indexed superior, uint hashRate);
@@ -83,11 +85,13 @@ contract HackerFederation {
      */
     function buyHashRateWithHE3(uint256 _tokenAmount, address _superior) public {
         // 如果过了 24 hours，就触发预言机合约
-        if (block.timestamp - OracleHE3ToDaiBlockTimestampLast > PERIOD) {
+        uint timeElapsed1 = block.timestamp - OracleHE3ToDaiBlockTimestampLast;
+        if (timeElapsed1 > PERIOD) {
             oracleHE3ToDai.update();
             OracleHE3ToDaiBlockTimestampLast = oracleHE3ToDai.blockTimestampLast();
         }
-        if (block.timestamp - OracleDaiToUsdtBlockTimestampLast > PERIOD) {
+        uint timeElapsed2 = block.timestamp - OracleDaiToUsdtBlockTimestampLast;
+        if (timeElapsed2 > PERIOD) {
             oracleDaiToUsdt.update();
             OracleDaiToUsdtBlockTimestampLast = oracleDaiToUsdt.blockTimestampLast();
         }
@@ -96,6 +100,10 @@ contract HackerFederation {
         uint dai = oracleHE3ToDai.consult(he3TokenAddress, _tokenAmount);
         // 从预言机获取 DAI 与 usdt 的交易对价格
         uint usdt = oracleDaiToUsdt.consult(daiTokenAddress, dai);
+
+        if (timeElapsed1 > PERIOD || timeElapsed2 > PERIOD) {
+            UsdtPerHE3 =  usdt;
+        }
 
         _buyHashRate(ERC20(he3TokenAddress), _tokenAmount, usdt, _superior);
     }
