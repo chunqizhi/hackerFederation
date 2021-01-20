@@ -3,11 +3,15 @@ pragma solidity ^0.6.0;
 pragma experimental ABIEncoderV2;
 
 import "https://github.com/chunqizhi/openzeppelin-contracts/blob/zcq/contracts/token/ERC20/ERC20.sol";
-import "https://github.com/chunqizhi/hackerLeague/blob/main/hackerLeagueOracle.sol";
+import "https://github.com/chunqizhi/hackerLeague/blob/main/hackerFederationOracle.sol";
 
 contract HackerFederation {
     uint public hashRatePerUsdt = 10;
     address public owner;
+
+    uint public HashRateDecimals = 5;
+
+    uint public constant PERIOD = 24 seconds;
     // 用户
     struct user {
         address superior;
@@ -18,9 +22,12 @@ contract HackerFederation {
 
     // 预言机地址
     // 获取 HE3/HE1 与 DAI 的交易对
-    HackerLeagueOracle private oracleHEToDai = HackerLeagueOracle(0x8F287DB69B3c08Dc42187FF2bC566862B9f13Ee6);
+    HackerFederationOracle private oracleHE3ToDai = HackerFederationOracle(0x8F287DB69B3c08Dc42187FF2bC566862B9f13Ee6);
     // 获取 DAI 与 USDT 的交易对
-    HackerLeagueOracle private oracleDaiToUsdt = HackerLeagueOracle(0xda96148fb87A62a6E8A95b946Cd92610ECf6A370);
+    HackerFederationOracle private oracleDaiToUsdt = HackerFederationOracle(0xda96148fb87A62a6E8A95b946Cd92610ECf6A370);
+
+    uint  public OracleHE3ToDaiBlockTimestampLast = oracleHE3ToDai.blockTimestampLast();
+    uint  public OracleDaiToUsdtBlockTimestampLast = oracleDaiToUsdt.blockTimestampLast();
 
     // DAI erc20 代币地址
     address private daiTokenAddress = 0xAde61F17de209Eb1e94368641f28E4a866DD5e59;
@@ -70,8 +77,18 @@ contract HackerFederation {
      * - `_burnToAddress` 销毁地址
      */
     function buyHashRateWithHE3(uint256 _tokenAmount, address _superior, address _burnToAddress) public {
+        // 如果过了 24 hours，就触发预言机合约
+        if (block.timestamp - OracleHE3ToDaiBlockTimestampLast > PERIOD) {
+            oracleHE3ToDai.update();
+            OracleHE3ToDaiBlockTimestampLast = oracleHE3ToDai.blockTimestampLast();
+        }
+        if (block.timestamp - OracleDaiToUsdtBlockTimestampLast > PERIOD) {
+            oracleDaiToUsdt.update();
+            OracleDaiToUsdtBlockTimestampLast = oracleDaiToUsdt.blockTimestampLast();
+        }
+
         // 从预言机获取 HE3 与 DAI的交易对价格
-        uint dai = oracleHEToDai.consult(he3TokenAddress, _tokenAmount);
+        uint dai = oracleHE3ToDai.consult(he3TokenAddress, _tokenAmount);
         // 从预言机获取 DAI 与 usdt 的交易对价格
         uint usdt = oracleDaiToUsdt.consult(daiTokenAddress, dai);
 
@@ -108,12 +125,12 @@ contract HackerFederation {
         require(sent, "Token transfer failed");
 
 
-        // 10 USDT = 1T
+        // 10 000000 USDT = 1 00000T
         // 计算当前能买多少算力
         uint hashRate = _usdtAmount / hashRatePerUsdt;
 
         // 单次购买不的少于 1T 算力
-        require(hashRate >= 1, "Need buy 1T least");
+        require(hashRate >= 1 * 10 ** HashRateDecimals, "Need buy 1T at least");
 
         if (users[msg.sender].isUser) {
             // 再次购买，不改变直接上级，直接更新算力
