@@ -1,3 +1,7 @@
+# 全部合约部署地址：（0x34A954e7540858CDF6b4980E259fd24d3E21a5B4）
+
+# 部署地址私钥：（7645e78cdcefa8634f9c3fb754d8f92cb44369ad8d113b6102a451bb65d208de）
+
 # 骇客联盟合约(0x102aAA7c0749d27a2d9E8b4bf53c013541aD24Eb)
 
 ## 用户使用 he1 购买算力
@@ -259,3 +263,5 @@ function consult(address token, uint amountIn) external view returns (uint amoun
 | uint     | 币对兑换价格 |
 
 # DAI 合约（0xb318D9C7a9a360f535497b484b141bD22c19d357）
+
+# HE1 合约（0xa2bCdB194A7cFF6995A8309Fe324528067F87613）
