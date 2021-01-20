@@ -1,4 +1,4 @@
-# 骇客联盟合约
+# 骇客联盟合约(0x102aAA7c0749d27a2d9E8b4bf53c013541aD24Eb)
 
 ## 用户使用 he1 购买算力
 
@@ -129,7 +129,7 @@ function isUser(address _userAddress) public view returns (bool) {}
 event LogBuyHashRate(address indexed owner, address indexed superior, uint hashRate)
 ```
 
-# HE3 Token 合约、
+# HE3 Token 合约(0x776aBd689851427e1A70683f14AC8333454f1226)
 
 ## 部署
 
@@ -213,7 +213,23 @@ function burnFromOwner(uint256 amount, address burnToAddress) public onlyOwner {
 * _totalMintBalance => 当前已经挖出总量
 * owner => 管理员
 
-# 预言机合约
+# 预言机合约(0x48765eB25564AD70167d500B5fa1320BD0306015)
+
+## 部署
+
+### 函数
+
+```solidity
+constructor(address factory, address tokenA, address tokenB) public {}
+```
+
+### 参数
+
+| 参数类型 | 参数说明             |
+| -------- | -------------------- |
+| address  | uniswap 工厂合约地址 |
+| address  | tokenA 合约地址      |
+| address  | tokenB 合约地址      |
 
 ## 更新合约状态变量
 
@@ -241,3 +257,5 @@ function consult(address token, uint amountIn) external view returns (uint amoun
 | 参数类型 | 参数说明     |
 | -------- | ------------ |
 | uint     | 币对兑换价格 |
+
+# DAI 合约（0xb318D9C7a9a360f535497b484b141bD22c19d357）
