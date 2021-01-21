@@ -144,6 +144,14 @@ function isUser(address _userAddress) public view returns (bool) {}
 event LogBuyHashRate(address indexed owner, address indexed superior, uint hashRate)
 ```
 
+## 变量
+
+* UsdtPerHE3 => 每个 he3 兑换多少个 usdt
+* PERIOD => 更新预言机价格的周期
+* HashRateDecimals => 算力小数位个数
+* _burnAddress => 销毁地址，默认为： 0xC206F4CC6ef3C7bD1c3aade977f0A28ac42F3E37
+* hashRatePerUsdt => 每个 usdt 多少 T 算力
+
 # HE3 Token 合约(0x776aBd689851427e1A70683f14AC8333454f1226)
 
 ## 部署
@@ -190,7 +198,7 @@ function setBurnAddress(address newBurnAddress) public onlyOwner {}
 | -------- | -------- |
 | address  | 销毁地址 |
 
-## 挖矿
+## 挖矿（提取收益）
 
 ### 函数
 
@@ -241,6 +249,7 @@ function burnFromOwner(uint256 amount, address burnToAddress) public onlyOwner {
 
 * _totalMintBalance => 当前已经挖出总量
 * owner => 管理员
+* _burnAddress => 销毁地址，默认为： 0xC206F4CC6ef3C7bD1c3aade977f0A28ac42F3E37
 
 # 预言机合约(0x48765eB25564AD70167d500B5fa1320BD0306015)
 
