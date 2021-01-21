@@ -151,6 +151,7 @@ event LogBuyHashRate(address indexed owner, address indexed superior, uint hashR
 * HashRateDecimals => 算力小数位个数
 * _burnAddress => 销毁地址，默认为： 0xC206F4CC6ef3C7bD1c3aade977f0A28ac42F3E37
 * hashRatePerUsdt => 每个 usdt 多少 T 算力
+* UsdtPerHE3Decimals => HE-3 对 usdt 的小数点
 
 # HE3 Token 合约(0x576195a2A5e70DB0B50938C56bfE396078a5303c)
 
