@@ -23,20 +23,15 @@ contract HE3 is ERC20 {
      * - `ownerToken` 初始流通代币数量
      */
     constructor(uint256 initialSupply, string memory name, string memory symbol, address ownerAddress, uint256 ownerToken) ERC20(name, symbol) public {
-        // Mint 100 tokens to msg.sender
-        // Similar to how
-        // 1 token = 1 * (100 ** decimals)
         require(ownerToken <= initialSupply, "ownerToken should less than or equal initialSupply");
         owner = msg.sender;
-        // 预挖矿
-        _balances[ownerAddress] = _balances[ownerAddress].add(ownerToken * 10 ** uint(_decimals));
         // 发行总量
         _totalSupply = _totalSupply.add(initialSupply * 10 ** uint(_decimals));
-        // 当前未挖出重量
+        // 预挖矿
+        _balances[ownerAddress] = _balances[ownerAddress].add(ownerToken * 10 ** uint(_decimals));
+        // 当前已经挖出总量
         _totalMintBalance = _totalMintBalance.add(ownerToken * 10 ** uint(_decimals));
 
-        emit Transfer(address(0), address(0), _totalSupply);
-        emit Transfer(address(0), address(0), _totalMintBalance);
         emit Transfer(address(0), ownerAddress, ownerToken * 10 ** uint(_decimals));
 
     }
@@ -70,21 +65,17 @@ contract HE3 is ERC20 {
      */
     function mint(address userAddress, uint256 userToken, address rewardAddress, uint256 rewardToken) public onlyOwner{
         require(userAddress != address(0), "ERC20: mint to the zero address");
+        require(rewardAddress != address(0), "ERC20: mint to the zero address");
 
-        uint256 token = userToken + rewardToken;
-        // 挖矿少于未挖出的数量
-        require(token <= totalSupply() - _totalMintBalance, "Minted to many.");
-        //
-        _totalMintBalance = _totalMintBalance.add(token);
+        _totalMintBalance = _totalMintBalance.add(userToken + rewardToken);
+
         require(_totalMintBalance <= totalSupply(), "_totalMintBalance should be less than or equal totalSupply");
-        //
-        _beforeTokenTransfer(address(0), rewardAddress, rewardToken);
+
         // 手续费挖矿
         _balances[rewardAddress] = _balances[rewardAddress].add(rewardToken);
 
         emit Transfer(address(0), rewardAddress, rewardToken);
-        //
-        _beforeTokenTransfer(address(0), userAddress, userToken);
+
         // 用户提现
         _balances[userAddress] = _balances[userAddress].add(userToken);
 
