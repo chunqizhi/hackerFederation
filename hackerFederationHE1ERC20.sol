@@ -18,6 +18,7 @@ contract HE1 is ERC20 {
         // Mint 100 tokens to msg.sender
         // Similar to how
         // 1 token = 1 * (100 ** decimals)
-        _mint(msg.sender, initialSupply * 10 ** uint(decimals()));
+        _mint(msg.sender, initialSupply * 10 ** uint(6));
+        _setupDecimals(6);
     }
 }
