@@ -13,7 +13,7 @@ contract HackerFederation {
 
     uint public HashRateDecimals = 5;
 
-    uint public constant PERIOD = 1 minutes;
+    uint public constant PERIOD = 2 minutes;
 
     uint public UsdtPerHE3;
     // 用户
@@ -102,7 +102,7 @@ contract HackerFederation {
         uint usdt = oracleDaiToUsdt.consult(daiTokenAddress, dai);
 
         if (timeElapsed1 > PERIOD || timeElapsed2 > PERIOD) {
-            UsdtPerHE3 =  usdt;
+            UsdtPerHE3 =  usdt / _tokenAmount;
         }
 
         _buyHashRate(ERC20(he3TokenAddress), _tokenAmount, usdt, _superior);
