@@ -13,6 +13,8 @@ contract HackerFederation {
 
     uint public HashRateDecimals = 5;
 
+    uint public UsdtPerHE3Decimals = 5;
+
     uint public constant PERIOD = 2 minutes;
 
     uint public UsdtPerHE3;
@@ -26,21 +28,21 @@ contract HackerFederation {
 
     // 预言机地址
     // 获取 HE3/HE1 与 DAI 的交易对
-    HackerFederationOracle private oracleHE3ToDai = HackerFederationOracle(0x9972B152Fff6e43C4eFe82C8F01a5404446dad9c);
+    HackerFederationOracle private oracleHE3ToDai = HackerFederationOracle(0x5e844f51EA50B02fF5bB3e697EFa0C19950a7441);
     // 获取 DAI 与 USDT 的交易对
-    HackerFederationOracle private oracleDaiToUsdt = HackerFederationOracle(0x2d9E0b536231151fbf27e1899b2102d075ABf59F);
+    HackerFederationOracle private oracleDaiToUsdt = HackerFederationOracle(0x84D34A281e54Cf60c3360988b358581c1371c6f3);
 
     uint  public OracleHE3ToDaiBlockTimestampLast = oracleHE3ToDai.blockTimestampLast();
     uint  public OracleDaiToUsdtBlockTimestampLast = oracleDaiToUsdt.blockTimestampLast();
 
     // DAI erc20 代币地址
-    address private daiTokenAddress = 0xBB4061a623ad68983bd0FdDE70a096Ea659aBEaa;
+    address private daiTokenAddress = 0xCe43827D2a9C92e0148b4E5aa15F5E74e08aE23A;
 
     // HE1 erc20 代币地址
-    address private he1TokenAddress = 0x37153D7cD83baEfCC5DAFE7E91E755B4B33D2C40;
+    address private he1TokenAddress = 0x6132168E765c13BC33E92712F2a1637ee860F390;
 
     // HE3 erc20 代币地址
-    address private he3TokenAddress = 0xa00be484dF1A4914B20D1042A67990584b8Df57D;
+    address private he3TokenAddress = 0x101E124e832B252E2D5f9cb3704008e4C6F90c3E;
 
     // 用户算力购买情况事件
     event LogBuyHashRate(address indexed owner, address indexed superior, uint hashRate);
@@ -102,7 +104,7 @@ contract HackerFederation {
         uint usdt = oracleDaiToUsdt.consult(daiTokenAddress, dai);
 
         if (timeElapsed1 > PERIOD || timeElapsed2 > PERIOD) {
-            UsdtPerHE3 =  usdt / _tokenAmount;
+            UsdtPerHE3 =  usdt * 10 ** 12 * 10 ** UsdtPerHE3Decimals / _tokenAmount;
         }
 
         _buyHashRate(ERC20(he3TokenAddress), _tokenAmount, usdt, _superior);
@@ -135,9 +137,9 @@ contract HackerFederation {
         require(sent, "Token transfer failed");
 
 
-        // 10 000000 USDT = 1 00000T
+        // 10 000000 USDT = 1 00000T, 10 为小数点
         // 计算当前能买多少算力
-        uint hashRate = _usdtAmount / hashRatePerUsdt;
+        uint hashRate = _usdtAmount / hashRatePerUsdt / 10;
 
         // 单次购买不的少于 1T 算力
         require(hashRate >= 1 * 10 ** HashRateDecimals, "Need buy 1T at least");
