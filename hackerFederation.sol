@@ -13,7 +13,7 @@ contract HackerFederation {
 
     uint public HashRateDecimals = 5;
 
-    uint public UsdtPerHE3Decimals = 5;
+    uint public UsdtPerHE3Decimals = 6;
 
     uint public constant PERIOD = 2 minutes;
 
