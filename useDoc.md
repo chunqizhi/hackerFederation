@@ -2,7 +2,7 @@
 
 # 部署地址私钥：（7645e78cdcefa8634f9c3fb754d8f92cb44369ad8d113b6102a451bb65d208de）
 
-# 骇客联盟合约(0x102aAA7c0749d27a2d9E8b4bf53c013541aD24Eb)
+# 骇客联盟合约(0xFBAc734cF976f38b427305d28Fc4351ce7591f68)
 
 ## 用户使用 he1 购买算力
 
@@ -152,7 +152,7 @@ event LogBuyHashRate(address indexed owner, address indexed superior, uint hashR
 * _burnAddress => 销毁地址，默认为： 0xC206F4CC6ef3C7bD1c3aade977f0A28ac42F3E37
 * hashRatePerUsdt => 每个 usdt 多少 T 算力
 
-# HE3 Token 合约(0x776aBd689851427e1A70683f14AC8333454f1226)
+# HE3 Token 合约(0x576195a2A5e70DB0B50938C56bfE396078a5303c)
 
 ## 部署
 
@@ -251,7 +251,7 @@ function burnFromOwner(uint256 amount, address burnToAddress) public onlyOwner {
 * owner => 管理员
 * _burnAddress => 销毁地址，默认为： 0xC206F4CC6ef3C7bD1c3aade977f0A28ac42F3E37
 
-# 预言机合约(0x48765eB25564AD70167d500B5fa1320BD0306015)
+# 预言机合约(DAIToUSDT:0x1E18eee06D32147C31124B0036E5f712b74567C2)(HE-3ToDAI:0x0C9e65596dFa20508aa5026bDc60244cAe480984)
 
 ## 部署
 
@@ -296,6 +296,6 @@ function consult(address token, uint amountIn) external view returns (uint amoun
 | -------- | ------------ |
 | uint     | 币对兑换价格 |
 
-# DAI 合约（0xb318D9C7a9a360f535497b484b141bD22c19d357）
+# DAI 合约（0xD011F88e679820c0A6a200af5F01a994Ac693Ef6）
 
-# HE1 合约（0xa2bCdB194A7cFF6995A8309Fe324528067F87613）
+# HE1 合约（0x3024ed09162660ad16E9de3F2F892c286cf38c6C）
