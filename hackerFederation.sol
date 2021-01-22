@@ -6,22 +6,32 @@ import "https://github.com/chunqizhi/openzeppelin-contracts/blob/zcq/contracts/t
 import "https://github.com/chunqizhi/hackerLeague/blob/main/hackerFederationOracle.sol";
 
 contract HackerFederation {
-    // 顶点地址
-    address public rootAddress;
-    // 初始兑换值
-    uint public usdtPerHE3 = 4000000;
     // 更新预言机周期
     uint public constant PERIOD = 2 minutes;
+    // 初始兑换值
+    uint public usdtPerHE3 = 4000000;
     // 算力小数点位数
     uint public hashRateDecimals = 5;
-    // 销毁地址
-    address public burnAddress = 0xC206F4CC6ef3C7bD1c3aade977f0A28ac42F3E37;
     // 每 10 usdt = 1 T
     uint public hashRatePerUsdt = 10;
     // usdtPerHE3 的小数点位数
     uint public usdtPerHE3Decimals = 6;
+    // 对应 oracleHE3ToDai 预言机的 blockTimestampLast
+    uint  public OracleHE3ToDaiBlockTimestampLast;
+    // 对应 oracleDaiToUsdt 预言机的 blockTimestampLast
+    uint  public OracleDaiToUsdtBlockTimestampLast;
     //
     address public owner;
+    // 顶点地址
+    address public rootAddress;
+    // 销毁地址
+    address public burnAddress = 0xC206F4CC6ef3C7bD1c3aade977f0A28ac42F3E37;
+    // DAI erc20 代币地址
+    address public daiTokenAddress = 0x9154091d89064B625b4A5f59fD5a8416690289A9;
+    // HE1 erc20 代币地址
+    address public he1TokenAddress = 0x0480F9dd2a0D29ED3daeF8a3c4a9cA922a637bb7;
+    // HE3 erc20 代币地址
+    address public he3TokenAddress = 0xbFb8c255993C4A7c8b1912Eb0261278126E2dA77;
     // 用户信息
     struct User {
         address superior;
@@ -30,21 +40,10 @@ contract HackerFederation {
     }
     // 保存用户信息对应关系
     mapping(address => User) public users;
-    // 预言机地址
     // 获取 HE3/HE1 与 DAI 的交易对
-    HackerFederationOracle private oracleHE3ToDai = HackerFederationOracle(0x24248815dd3E61d9FBA7551550A3a77E013ffef7);
+    HackerFederationOracle public oracleHE3ToDai;
     // 获取 DAI 与 USDT 的交易对
-    HackerFederationOracle private oracleDaiToUsdt = HackerFederationOracle(0x52b1e1A756CD76C9BFd62B430b65C4214A0Fa86B);
-    // 对应 oracleHE3ToDai 预言机的 blockTimestampLast
-    uint  public OracleHE3ToDaiBlockTimestampLast = oracleHE3ToDai.blockTimestampLast();
-    // 对应 oracleDaiToUsdt 预言机的 blockTimestampLast
-    uint  public OracleDaiToUsdtBlockTimestampLast = oracleDaiToUsdt.blockTimestampLast();
-    // DAI erc20 代币地址
-    address private daiTokenAddress = 0x9154091d89064B625b4A5f59fD5a8416690289A9;
-    // HE1 erc20 代币地址
-    address private he1TokenAddress = 0x0480F9dd2a0D29ED3daeF8a3c4a9cA922a637bb7;
-    // HE3 erc20 代币地址
-    address private he3TokenAddress = 0xbFb8c255993C4A7c8b1912Eb0261278126E2dA77;
+    HackerFederationOracle public oracleDaiToUsdt;
 
     // 用户算力购买情况事件
     event LogBuyHashRate(address indexed owner, address indexed superior, uint hashRate);
@@ -70,6 +69,33 @@ contract HackerFederation {
     // 更改销毁地址
     function setBurnAddress(address _newBurnAddress) public onlyOwner {
         burnAddress = _newBurnAddress;
+    }
+
+    // 设置 HE3ToDai 预言机
+    function setHackerFederationOracleHE3ToDaiAddress(address _hackerFederationOracleHE3ToDaiAddress) public onlyOwner {
+        oracleHE3ToDai = HackerFederationOracle(_hackerFederationOracleHE3ToDaiAddress);
+        OracleHE3ToDaiBlockTimestampLast = oracleHE3ToDai.blockTimestampLast();
+    }
+
+    // 设置 DaiToUsdt 预言机
+    function setHackerFederationOracleDaiToUsdtAddress(address _hackerFederationOracleDaiToUsdtAddress) public onlyOwner {
+        oracleHE3ToDai = HackerFederationOracle(_hackerFederationOracleDaiToUsdtAddress);
+        OracleDaiToUsdtBlockTimestampLast = oracleDaiToUsdt.blockTimestampLast();
+    }
+
+    // 设置 he3 合约地址
+    function setHe3TokenAddress(address _he3TokenAddress) public onlyOwner {
+        he3TokenAddress = _he3TokenAddress;
+    }
+
+    // 设置 he1 合约地址
+    function setHe1TokenAddress(address _he1TokenAddress) public onlyOwner {
+        he1TokenAddress = _he1TokenAddress;
+    }
+
+    // 设置 dai 合约地址
+    function setDaiTokenAddress(address _daiTokenAddress) public onlyOwner {
+        daiTokenAddress = _daiTokenAddress;
     }
 
     /**
