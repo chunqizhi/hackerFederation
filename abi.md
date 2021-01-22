@@ -1,4 +1,4 @@
-### 骇客联盟合约 abi（0xFBAc734cF976f38b427305d28Fc4351ce7591f68）
+### 骇客联盟合约 abi（0x0dC7EBF395a5ec0d835c1F53D6551d1c514d1505）
 
 ```abi
 [
@@ -99,6 +99,19 @@
 	},
 	{
 		"inputs": [],
+		"name": "UsdtPerHE3Decimals",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
 		"name": "_burnAddress",
 		"outputs": [
 			{
@@ -160,25 +173,6 @@
 		"type": "function"
 	},
 	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "_userAddress",
-				"type": "address"
-			}
-		],
-		"name": "isUser",
-		"outputs": [
-			{
-				"internalType": "bool",
-				"name": "",
-				"type": "bool"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
 		"inputs": [],
 		"name": "owner",
 		"outputs": [
@@ -208,74 +202,13 @@
 		"inputs": [
 			{
 				"internalType": "address",
-				"name": "_userAddress",
+				"name": "newOwnerAddress",
 				"type": "address"
 			}
 		],
-		"name": "userHashRate",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "_userAddress",
-				"type": "address"
-			}
-		],
-		"name": "userInfo",
-		"outputs": [
-			{
-				"components": [
-					{
-						"internalType": "address",
-						"name": "superior",
-						"type": "address"
-					},
-					{
-						"internalType": "uint256",
-						"name": "hashRate",
-						"type": "uint256"
-					},
-					{
-						"internalType": "bool",
-						"name": "isUser",
-						"type": "bool"
-					}
-				],
-				"internalType": "struct HackerFederation.user",
-				"name": "",
-				"type": "tuple"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "_userAddress",
-				"type": "address"
-			}
-		],
-		"name": "userSuperior",
-		"outputs": [
-			{
-				"internalType": "address",
-				"name": "",
-				"type": "address"
-			}
-		],
-		"stateMutability": "view",
+		"name": "setOwner",
+		"outputs": [],
+		"stateMutability": "nonpayable",
 		"type": "function"
 	},
 	{
@@ -310,7 +243,7 @@
 ]
 ```
 
-### HE-1 合约 abi（0x3024ed09162660ad16E9de3F2F892c286cf38c6C）
+### HE-1 合约 abi（0x0480F9dd2a0D29ED3daeF8a3c4a9cA922a637bb7）
 
 ```abi
 [
@@ -703,7 +636,7 @@
 ]
 ```
 
-### HE-3 合约 abi（0x576195a2A5e70DB0B50938C56bfE396078a5303c）
+### HE-3 合约 abi（0xbFb8c255993C4A7c8b1912Eb0261278126E2dA77）
 
 ```abi
 [
@@ -1219,169 +1152,6 @@
 				"type": "bool"
 			}
 		],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	}
-]
-```
-
-### 预言机合约 abi
-
-```abi
-[
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "factory",
-				"type": "address"
-			},
-			{
-				"internalType": "address",
-				"name": "tokenA",
-				"type": "address"
-			},
-			{
-				"internalType": "address",
-				"name": "tokenB",
-				"type": "address"
-			}
-		],
-		"stateMutability": "nonpayable",
-		"type": "constructor"
-	},
-	{
-		"inputs": [],
-		"name": "PERIOD",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "blockTimestampLast",
-		"outputs": [
-			{
-				"internalType": "uint32",
-				"name": "",
-				"type": "uint32"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "token",
-				"type": "address"
-			},
-			{
-				"internalType": "uint256",
-				"name": "amountIn",
-				"type": "uint256"
-			}
-		],
-		"name": "consult",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "amountOut",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "price0Average",
-		"outputs": [
-			{
-				"internalType": "uint224",
-				"name": "_x",
-				"type": "uint224"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "price0CumulativeLast",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "price1Average",
-		"outputs": [
-			{
-				"internalType": "uint224",
-				"name": "_x",
-				"type": "uint224"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "price1CumulativeLast",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "token0",
-		"outputs": [
-			{
-				"internalType": "address",
-				"name": "",
-				"type": "address"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "token1",
-		"outputs": [
-			{
-				"internalType": "address",
-				"name": "",
-				"type": "address"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "update",
-		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"
 	}

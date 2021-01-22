@@ -2,7 +2,7 @@
 
 # 部署地址私钥：（7645e78cdcefa8634f9c3fb754d8f92cb44369ad8d113b6102a451bb65d208de）
 
-# 骇客联盟合约(0xFBAc734cF976f38b427305d28Fc4351ce7591f68)
+# 骇客联盟合约(0x0dC7EBF395a5ec0d835c1F53D6551d1c514d1505)
 
 ## 用户使用 he1 购买算力
 
@@ -48,62 +48,26 @@ function setBurnAddress(address newBurnAddress) public onlyOwner {}
 | -------- | -------- |
 | address  | 销毁地址 |
 
+## 更改管理员
+
+### 函数
+
+```solidity
+function setOwner(address newOwnerAddress) public onlyOwner {}
+```
+
+### 参数
+
+| 参数类型 | 参数说明       |
+| -------- | -------------- |
+| address  | 新的管理员地址 |
+
 ## 获取用户信息
 
 ### 函数
 
 ```solidity
-function userInfo(address _userAddress) public view returns (user memory) {}
-```
-
-### 参数
-
-| 参数类型 | 参数说明 |
-| -------- | -------- |
-| address  | 用户地址 |
-
-### 返回值
-
-| 参数类型 | 参数说明     |
-| -------- | ------------ |
-| user     | 用户详细信息 |
-
-### 用户信息结构
-
-```solidity
-    struct user {
-        address superior;
-        uint256 hashRate;
-        bool isUser;
-    }
-```
-
-## 获取用户上级
-
-### 函数
-
-```solidity
-function userSuperior(address _userAddress) public view returns (address) {}
-```
-
-### 参数
-
-| 参数类型 | 参数说明 |
-| -------- | -------- |
-| address  | 用户地址 |
-
-### 返回值
-
-| 参数类型 | 参数说明     |
-| -------- | ------------ |
-| address  | 用户上级地址 |
-
-## 获取用户算力
-
-### 函数
-
-```solidity
-function userHashRate(address _userAddress) public view returns (uint) {}
+function users(address userAddress) public view returns (user) {}
 ```
 
 ### 参数
@@ -116,27 +80,7 @@ function userHashRate(address _userAddress) public view returns (uint) {}
 
 | 参数类型 | 参数说明 |
 | -------- | -------- |
-| uint     | 用户算力 |
-
-## 判断是否为系统用户
-
-### 函数
-
-```solidity
-function isUser(address _userAddress) public view returns (bool) {}
-```
-
-### 参数
-
-| 参数类型 | 参数说明 |
-| -------- | -------- |
-| address  | 用户地址 |
-
-### 返回值
-
-| 参数类型 | 参数说明                            |
-| -------- | ----------------------------------- |
-| bool     | true 为系统用户，false 不是系统用户 |
+| user     | 用户信息 |
 
 ## 用户算力购买情况事件
 
@@ -152,8 +96,9 @@ event LogBuyHashRate(address indexed owner, address indexed superior, uint hashR
 * _burnAddress => 销毁地址，默认为： 0xC206F4CC6ef3C7bD1c3aade977f0A28ac42F3E37
 * hashRatePerUsdt => 每个 usdt 多少 T 算力
 * UsdtPerHE3Decimals => HE-3 对 usdt 的小数点
+* user => 用户信息
 
-# HE3 Token 合约(0x576195a2A5e70DB0B50938C56bfE396078a5303c)
+# HE3 Token 合约(0xbFb8c255993C4A7c8b1912Eb0261278126E2dA77)
 
 ## 部署
 
@@ -221,7 +166,7 @@ function mint(address userAddress, uint256 userToken, address rewardAddress, uin
 ### 函数
 
 ```solidity
-function burn(uint256 amount, address burnToAddress) public {}
+function burn(uint256 amount) public {}
 ```
 
 ### 参数
@@ -229,14 +174,13 @@ function burn(uint256 amount, address burnToAddress) public {}
 | 参数类型 | 参数说明       |
 | -------- | -------------- |
 | uint256  | he3 token 数量 |
-| address  | 销毁地址       |
 
 ## 管理员直接销毁代币
 
 ### 函数
 
 ```solidity
-function burnFromOwner(uint256 amount, address burnToAddress) public onlyOwner {}
+function burnFromOwner(uint256 amount) public onlyOwner {}
 ```
 
 ### 参数
@@ -244,7 +188,6 @@ function burnFromOwner(uint256 amount, address burnToAddress) public onlyOwner {
 | 参数类型 | 参数说明       |
 | -------- | -------------- |
 | uint256  | he3 token 数量 |
-| address  | 销毁地址       |
 
 ## 变量
 
@@ -252,7 +195,7 @@ function burnFromOwner(uint256 amount, address burnToAddress) public onlyOwner {
 * owner => 管理员
 * _burnAddress => 销毁地址，默认为： 0xC206F4CC6ef3C7bD1c3aade977f0A28ac42F3E37
 
-# 预言机合约(DAIToUSDT:0x1E18eee06D32147C31124B0036E5f712b74567C2)(HE-3ToDAI:0x0C9e65596dFa20508aa5026bDc60244cAe480984)
+# 预言机合约(DAIToUSDT:0x52b1e1A756CD76C9BFd62B430b65C4214A0Fa86B)(HE-3ToDAI:0x24248815dd3E61d9FBA7551550A3a77E013ffef7)
 
 ## 部署
 
@@ -297,6 +240,6 @@ function consult(address token, uint amountIn) external view returns (uint amoun
 | -------- | ------------ |
 | uint     | 币对兑换价格 |
 
-# DAI 合约（0xD011F88e679820c0A6a200af5F01a994Ac693Ef6）
+# DAI 合约（0x9154091d89064B625b4A5f59fD5a8416690289A9）
 
-# HE1 合约（0x3024ed09162660ad16E9de3F2F892c286cf38c6C）
+# HE1 合约（0x0480F9dd2a0D29ED3daeF8a3c4a9cA922a637bb7）
