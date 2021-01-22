@@ -39,7 +39,7 @@ function buyHashRateWithHE3(uint256 _tokenAmount, address _superior) public {}
 ### 函数
 
 ```solidity
-function setBurnAddress(address newBurnAddress) public onlyOwner {}
+function setBurnAddress(address _newBurnAddress) public onlyOwner {}
 ```
 
 ### 参数
@@ -53,7 +53,7 @@ function setBurnAddress(address newBurnAddress) public onlyOwner {}
 ### 函数
 
 ```solidity
-function setOwner(address newOwnerAddress) public onlyOwner {}
+function setOwner(address _newOwnerAddress) public onlyOwner {}
 ```
 
 ### 参数
@@ -67,7 +67,7 @@ function setOwner(address newOwnerAddress) public onlyOwner {}
 ### 函数
 
 ```solidity
-function users(address userAddress) public view returns (user) {}
+function users(address) public view returns (user) {}
 ```
 
 ### 参数
@@ -90,12 +90,13 @@ event LogBuyHashRate(address indexed owner, address indexed superior, uint hashR
 
 ## 变量
 
-* UsdtPerHE3 => 每个 he3 兑换多少个 usdt
+* rootAddress => 顶点地址
+* usdtPerHuE3 => 每个 he3 兑换多少个 usdt
 * PERIOD => 更新预言机价格的周期
-* HashRateDecimals => 算力小数位个数
-* _burnAddress => 销毁地址，默认为： 0xC206F4CC6ef3C7bD1c3aade977f0A28ac42F3E37
+* hashRateDecimals => 算力小数位个数
+* burnAddress => 销毁地址，默认为： 0xC206F4CC6ef3C7bD1c3aade977f0A28ac42F3E37
 * hashRatePerUsdt => 每个 usdt 多少 T 算力
-* UsdtPerHE3Decimals => HE-3 对 usdt 的小数点
+* usdtPerHE3Decimals => HE-3 对 usdt 的小数点
 * user => 用户信息
 
 # HE3 Token 合约(0xbFb8c255993C4A7c8b1912Eb0261278126E2dA77)

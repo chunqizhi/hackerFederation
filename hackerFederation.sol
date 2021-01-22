@@ -6,20 +6,21 @@ import "https://github.com/chunqizhi/openzeppelin-contracts/blob/zcq/contracts/t
 import "https://github.com/chunqizhi/hackerLeague/blob/main/hackerFederationOracle.sol";
 
 contract HackerFederation {
-    uint public UsdtPerHE3;
+    address public rootAddress;
+    uint public usdtPerHE3 = 4000000;
     uint public constant PERIOD = 2 minutes;
-    uint public HashRateDecimals = 5;
-    address public _burnAddress = 0xC206F4CC6ef3C7bD1c3aade977f0A28ac42F3E37;
+    uint public hashRateDecimals = 5;
+    address public burnAddress = 0xC206F4CC6ef3C7bD1c3aade977f0A28ac42F3E37;
     uint public hashRatePerUsdt = 10;
-    uint public UsdtPerHE3Decimals = 6;
+    uint public usdtPerHE3Decimals = 6;
     address public owner;
     // 用户
-    struct user {
+    struct User {
         address superior;
         uint256 hashRate;
         bool isUser;
     }
-    mapping(address => user) public users;
+    mapping(address => User) public users;
 
     // 预言机地址
     // 获取 HE3/HE1 与 DAI 的交易对
@@ -42,9 +43,11 @@ contract HackerFederation {
     // 用户算力购买情况事件
     event LogBuyHashRate(address indexed owner, address indexed superior, uint hashRate);
 
-    constructor() public {
+    constructor(address _rootAddress) public {
         //
         owner = msg.sender;
+        //
+        rootAddress = _rootAddress;
     }
 
     // 函数修改器，只有 owner 满足条件
@@ -54,13 +57,13 @@ contract HackerFederation {
     }
 
     // 更改管理员
-    function setOwner(address newOwnerAddress) public onlyOwner {
-        owner = newOwnerAddress;
+    function setOwner(address _newOwnerAddress) public onlyOwner {
+        owner = _newOwnerAddress;
     }
 
     // 更改销毁地址
-    function setBurnAddress(address newBurnAddress) public onlyOwner {
-        _burnAddress = newBurnAddress;
+    function setBurnAddress(address _newBurnAddress) public onlyOwner {
+        burnAddress = _newBurnAddress;
     }
 
     /**
@@ -104,7 +107,7 @@ contract HackerFederation {
         uint usdt = oracleDaiToUsdt.consult(daiTokenAddress, dai);
 
         if (timeElapsed1 > PERIOD || timeElapsed2 > PERIOD) {
-            UsdtPerHE3 =  usdt * 10 ** 12 * 10 ** UsdtPerHE3Decimals / _tokenAmount;
+            usdtPerHE3 =  usdt * 10 ** 12 * 10 ** usdtPerHE3Decimals / _tokenAmount;
         }
 
         _buyHashRate(ERC20(he3TokenAddress), _tokenAmount, usdt, _superior);
@@ -122,9 +125,9 @@ contract HackerFederation {
      * - `_superior` 直接上级
      */
     function _buyHashRate(ERC20 _tokenAddress,uint _tokenAmount, uint256 _usdtAmount, address _superior) internal {
-        // 判断上级是否是 user 或 owner，如果都不是，抛出错误
-        if (!(users[_superior].isUser || _superior == owner)) {
-            require(users[_superior].isUser, "Superior should be a user or owner");
+        // 判断上级是否是 user 或 rootAddress，如果都不是，抛出错误
+        if (!(users[_superior].isUser || _superior == rootAddress)) {
+            require(users[_superior].isUser, "Superior should be a user or rootAddress");
         }
 
         // 是否拥有 _amount 数量的 _token 代币
@@ -133,7 +136,7 @@ contract HackerFederation {
             "Token allowance too low"
         );
 
-        bool sent = _tokenAddress.transferFrom(msg.sender, _burnAddress, _tokenAmount);
+        bool sent = _tokenAddress.transferFrom(msg.sender, burnAddress, _tokenAmount);
         require(sent, "Token transfer failed");
 
 
@@ -142,7 +145,7 @@ contract HackerFederation {
         uint hashRate = _usdtAmount / hashRatePerUsdt / 10;
 
         // 单次购买不的少于 1T 算力
-        require(hashRate >= 1 * 10 ** HashRateDecimals, "Need buy 1T at least");
+        require(hashRate >= 1 * 10 ** hashRateDecimals, "Need buy 1T at least");
 
         if (users[msg.sender].isUser) {
             // 再次购买，不改变直接上级，直接更新算力
