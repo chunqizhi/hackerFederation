@@ -6,18 +6,13 @@ import "https://github.com/chunqizhi/openzeppelin-contracts/blob/zcq/contracts/t
 import "https://github.com/chunqizhi/hackerLeague/blob/main/hackerFederationOracle.sol";
 
 contract HackerFederation {
-    uint public hashRatePerUsdt = 10;
-    address public owner;
-
-    address public _burnAddress = 0xC206F4CC6ef3C7bD1c3aade977f0A28ac42F3E37;
-
-    uint public HashRateDecimals = 5;
-
-    uint public UsdtPerHE3Decimals = 6;
-
-    uint public constant PERIOD = 2 minutes;
-
     uint public UsdtPerHE3;
+    uint public constant PERIOD = 2 minutes;
+    uint public HashRateDecimals = 5;
+    address public _burnAddress = 0xC206F4CC6ef3C7bD1c3aade977f0A28ac42F3E37;
+    uint public hashRatePerUsdt = 10;
+    uint public UsdtPerHE3Decimals = 6;
+    address public owner;
     // 用户
     struct user {
         address superior;
@@ -28,21 +23,21 @@ contract HackerFederation {
 
     // 预言机地址
     // 获取 HE3/HE1 与 DAI 的交易对
-    HackerFederationOracle private oracleHE3ToDai = HackerFederationOracle(0x5e844f51EA50B02fF5bB3e697EFa0C19950a7441);
+    HackerFederationOracle private oracleHE3ToDai = HackerFederationOracle(0x24248815dd3E61d9FBA7551550A3a77E013ffef7);
     // 获取 DAI 与 USDT 的交易对
-    HackerFederationOracle private oracleDaiToUsdt = HackerFederationOracle(0x84D34A281e54Cf60c3360988b358581c1371c6f3);
+    HackerFederationOracle private oracleDaiToUsdt = HackerFederationOracle(0x52b1e1A756CD76C9BFd62B430b65C4214A0Fa86B);
 
     uint  public OracleHE3ToDaiBlockTimestampLast = oracleHE3ToDai.blockTimestampLast();
     uint  public OracleDaiToUsdtBlockTimestampLast = oracleDaiToUsdt.blockTimestampLast();
 
     // DAI erc20 代币地址
-    address private daiTokenAddress = 0xCe43827D2a9C92e0148b4E5aa15F5E74e08aE23A;
+    address private daiTokenAddress = 0x9154091d89064B625b4A5f59fD5a8416690289A9;
 
     // HE1 erc20 代币地址
-    address private he1TokenAddress = 0x6132168E765c13BC33E92712F2a1637ee860F390;
+    address private he1TokenAddress = 0x0480F9dd2a0D29ED3daeF8a3c4a9cA922a637bb7;
 
     // HE3 erc20 代币地址
-    address private he3TokenAddress = 0x101E124e832B252E2D5f9cb3704008e4C6F90c3E;
+    address private he3TokenAddress = 0xbFb8c255993C4A7c8b1912Eb0261278126E2dA77;
 
     // 用户算力购买情况事件
     event LogBuyHashRate(address indexed owner, address indexed superior, uint hashRate);
@@ -56,6 +51,11 @@ contract HackerFederation {
     modifier onlyOwner() {
         require(msg.sender == owner, "only owner");
         _;
+    }
+
+    // 更改管理员
+    function setOwner(address newOwnerAddress) public onlyOwner {
+        owner = newOwnerAddress;
     }
 
     // 更改销毁地址
@@ -156,51 +156,5 @@ contract HackerFederation {
 
         // 触发事件
         emit LogBuyHashRate(msg.sender, _superior, hashRate);
-    }
-
-    /**
-      * 获取用户信息
-      *
-      * Requirements:
-      *
-      * - `_userAddress` 用户地址
-      */
-    // 需要引入下面才能支持返回 user
-    // pragma experimental ABIEncoderV2
-    function userInfo(address _userAddress) public view returns (user memory) {
-        return users[_userAddress];
-    }
-
-    /**
-     * 获取用户上级
-     *
-     * Requirements:
-     *
-     * - `_userAddress` 用户地址
-     */
-    function userSuperior(address _userAddress) public view returns (address) {
-        return users[_userAddress].superior;
-    }
-
-    /**
-     * 获取用户算力
-     *
-     * Requirements:
-     *
-     * - `_userAddress` 用户地址
-     */
-    function userHashRate(address _userAddress) public view returns (uint) {
-        return users[_userAddress].hashRate;
-    }
-
-    /**
-     * 判断该地址是否为用户
-     *
-     * Requirements:
-     *
-     * - `_userAddress` 用户地址
-     */
-    function isUser(address _userAddress) public view returns (bool) {
-        return users[_userAddress].isUser;
     }
 }
