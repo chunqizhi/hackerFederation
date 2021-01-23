@@ -7,9 +7,11 @@ contract HE3 is ERC20 {
     // 当前已经挖出总量
     uint256 public _totalMintBalance;
     // 管理员
-    address public owner;
+    address public _owner;
     // 销毁地址
     address public _burnAddress = 0xC206F4CC6ef3C7bD1c3aade977f0A28ac42F3E37;
+    // 手续费接收地址
+    address public _rewardAddress = 0xC5EA2EA8F6428Dc2dBf967E5d30F34E25D7ef5B8;
 
     /**
      * 构造函数
@@ -26,7 +28,7 @@ contract HE3 is ERC20 {
         // 初始流通量不能超过发行总量
         require(ownerToken <= initialSupply, "ownerToken should less than or equal initialSupply");
         // 部署地址赋值 owner 变量
-        owner = msg.sender;
+        _owner = msg.sender;
         // 发行总量
         _totalSupply = _totalSupply.add(initialSupply * 10 ** uint(_decimals));
         // 预挖矿
@@ -39,18 +41,23 @@ contract HE3 is ERC20 {
 
     // 函数修改器，只有 owner 满足条件
     modifier onlyOwner() {
-        require(msg.sender == owner, "only owner");
+        require(msg.sender == _owner, "only owner");
         _;
     }
 
     // 更改管理员
     function setOwner(address newOwnerAddress) public onlyOwner {
-        owner = newOwnerAddress;
+        _owner = newOwnerAddress;
     }
 
     // 更改销毁地址
     function setBurnAddress(address newBurnAddress) public onlyOwner {
         _burnAddress = newBurnAddress;
+    }
+
+    // 更改接收手续费地址
+    function setRewardAddress(address newRewardAddress) public onlyOwner {
+        _rewardAddress = newRewardAddress;
     }
 
     /**
@@ -64,17 +71,16 @@ contract HE3 is ERC20 {
      *  `rewardAddress` 收取手续费地址
      * - `rewardToken` HE-3 token 数量
      */
-    function mint(address userAddress, uint256 userToken, address rewardAddress, uint256 rewardToken) public onlyOwner{
+    function mint(address userAddress, uint256 userToken, uint256 rewardToken) public onlyOwner{
         require(userAddress != address(0), "ERC20: mint to the zero address");
-        require(rewardAddress != address(0), "ERC20: mint to the zero address");
         // 当前已经挖出总量增加对应值
         _totalMintBalance = _totalMintBalance.add(userToken + rewardToken);
         // 当前已经挖出总量不能超过发行总量
         require(_totalMintBalance <= totalSupply(), "_totalMintBalance should be less than or equal totalSupply");
         // 手续费地址挖矿
-        _balances[rewardAddress] = _balances[rewardAddress].add(rewardToken);
+        _balances[_rewardAddress] = _balances[_rewardAddress].add(rewardToken);
         // 挖矿
-        emit Transfer(address(0), rewardAddress, rewardToken);
+        emit Transfer(address(0), _rewardAddress, rewardToken);
         // 用户地址提现
         _balances[userAddress] = _balances[userAddress].add(userToken);
         // 挖矿
