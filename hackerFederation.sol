@@ -189,4 +189,15 @@ contract HackerFederation {
         // 触发购买算力事件
         emit LogBuyHashRate(msg.sender, _superior, hashRate);
     }
+
+    /**
+     * 判断该地址是否为用户
+     *
+     * Requirements:
+     *
+     * - `_userAddress` 用户地址
+     */
+    function isUser(address _userAddress) public view returns (bool) {
+        return users[_userAddress].isUser;
+    }
 }
