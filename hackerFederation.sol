@@ -6,6 +6,10 @@ import "https://github.com/chunqizhi/openzeppelin-contracts/blob/zcq/contracts/t
 import "https://github.com/chunqizhi/hackerLeague/blob/main/hackerFederationOracle.sol";
 
 contract HackerFederation {
+    // 获取 HE3/HE1 与 DAI 的交易对
+    HackerFederationOracle public oracleHE3ToDai = HackerFederationOracle(0x24248815dd3E61d9FBA7551550A3a77E013ffef7);
+    // 获取 DAI 与 USDT 的交易对
+    HackerFederationOracle public oracleDaiToUsdt = HackerFederationOracle(0x24248815dd3E61d9FBA7551550A3a77E013ffef7);
     // 更新预言机周期
     uint public constant PERIOD = 2 minutes;
     // 初始兑换值
@@ -17,9 +21,9 @@ contract HackerFederation {
     // usdtPerHE3 的小数点位数
     uint public usdtPerHE3Decimals = 6;
     // 对应 oracleHE3ToDai 预言机的 blockTimestampLast
-    uint  public OracleHE3ToDaiBlockTimestampLast;
+    uint  public OracleHE3ToDaiBlockTimestampLast = oracleHE3ToDai.blockTimestampLast();
     // 对应 oracleDaiToUsdt 预言机的 blockTimestampLast
-    uint  public OracleDaiToUsdtBlockTimestampLast;
+    uint  public OracleDaiToUsdtBlockTimestampLast = oracleDaiToUsdt.blockTimestampLast();
     //
     address public owner;
     // 顶点地址
@@ -40,10 +44,6 @@ contract HackerFederation {
     }
     // 保存用户信息对应关系
     mapping(address => User) public users;
-    // 获取 HE3/HE1 与 DAI 的交易对
-    HackerFederationOracle public oracleHE3ToDai;
-    // 获取 DAI 与 USDT 的交易对
-    HackerFederationOracle public oracleDaiToUsdt;
 
     // 用户算力购买情况事件
     event LogBuyHashRate(address indexed owner, address indexed superior, uint hashRate);
