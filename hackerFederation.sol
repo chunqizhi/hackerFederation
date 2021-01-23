@@ -1,41 +1,39 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.6.0;
-pragma experimental ABIEncoderV2;
 
 import "https://github.com/chunqizhi/openzeppelin-contracts/blob/zcq/contracts/token/ERC20/ERC20.sol";
-import "https://github.com/chunqizhi/hackerLeague/blob/main/hackerFederationOracle.sol";
+
+interface Balance {
+    function balanceOf(address account) external view returns (uint256);
+}
 
 contract HackerFederation {
-    // 获取 HE3/HE1 与 DAI 的交易对
-    HackerFederationOracle public oracleHE3ToDai = HackerFederationOracle(0x036cc7Ea3a09296f3f7B0019c691decd40D689F4);
-    // 获取 DAI 与 USDT 的交易对
-    HackerFederationOracle public oracleDaiToUsdt = HackerFederationOracle(0xc51aA3f76B1Ab57c50ddBE358B0f7C10e3aDaeFD);
-    // 更新预言机周期
-    uint public constant PERIOD = 2 minutes;
-    // 初始兑换值
-    uint public usdtPerHE3 = 2000000;
     // 算力小数点位数
     uint public hashRateDecimals = 5;
     // 每 10 usdt = 1 T
     uint public hashRatePerUsdt = 10;
     // usdtPerHE3 的小数点位数
     uint public usdtPerHE3Decimals = 6;
-    // 对应 oracleHE3ToDai 预言机的 blockTimestampLast
-    uint  public OracleHE3ToDaiBlockTimestampLast = oracleHE3ToDai.blockTimestampLast();
-    // 对应 oracleDaiToUsdt 预言机的 blockTimestampLast
-    uint  public OracleDaiToUsdtBlockTimestampLast = oracleDaiToUsdt.blockTimestampLast();
     //
     address public owner;
     // 顶点地址
     address public rootAddress = 0x3585762FBFf4b2b7D92Af16b2BCfa90FE3562087;
     // 销毁地址
     address public burnAddress = 0xC206F4CC6ef3C7bD1c3aade977f0A28ac42F3E37;
-    // DAI erc20 代币地址
-    address public daiTokenAddress = 0x87ac13ca508e8Bb9D0DD0411A2289D8f2bFf1E65;
+
+    // dai 对 he3 币对 address
+    address public daiToHe3Address = address(0x00a51d3b6b1a8e3941751b10ce310258651d9dd5e3);
+
+    // Dai erc20 代币地址
+    address public daiTokenAddress = 0xE00757a0251c2D9CD20314d8721AC0B2a32F1c9D;
+    Balance balanceDai = Balance(daiTokenAddress);
     // HE3 erc20 代币地址
-    address public he3TokenAddress = 0xa1B33bE25f1A186C605a6297Be217c35bf41e8BB;
+    address public he3TokenAddress = 0xd9d3A935090BF031977427954b15b818e058b1FC;
+    Balance balanceHe3 = Balance(he3TokenAddress);
+
     // HE1 erc20 代币地址
-    address public he1TokenAddress = 0x32356240342D0607937D8e3C82a73c4f5bEbfd41;
+    address public he1TokenAddress = 0xd9d3A935090BF031977427954b15b818e058b1FC;
+
     // 用户信息
     struct User {
         address superior;
@@ -59,6 +57,12 @@ contract HackerFederation {
         _;
     }
 
+    // 1 : 2 = he3 : dai
+    // 1 he3 = 2 dai
+    function getDaiPerHe3() public view returns (uint) {
+        return balanceDai.balanceOf(daiToHe3Address) * 10 ** usdtPerHE3Decimals / balanceHe3.balanceOf(daiToHe3Address);
+    }
+
     // 更改管理员
     function setOwner(address _newOwnerAddress) public onlyOwner {
         owner = _newOwnerAddress;
@@ -67,18 +71,6 @@ contract HackerFederation {
     // 更改销毁地址
     function setBurnAddress(address _newBurnAddress) public onlyOwner {
         burnAddress = _newBurnAddress;
-    }
-
-    // 设置 HE3ToDai 预言机
-    function setHackerFederationOracleHE3ToDaiAddress(address _hackerFederationOracleHE3ToDaiAddress) public onlyOwner {
-        oracleHE3ToDai = HackerFederationOracle(_hackerFederationOracleHE3ToDaiAddress);
-        OracleHE3ToDaiBlockTimestampLast = oracleHE3ToDai.blockTimestampLast();
-    }
-
-    // 设置 DaiToUsdt 预言机
-    function setHackerFederationOracleDaiToUsdtAddress(address _hackerFederationOracleDaiToUsdtAddress) public onlyOwner {
-        oracleHE3ToDai = HackerFederationOracle(_hackerFederationOracleDaiToUsdtAddress);
-        OracleDaiToUsdtBlockTimestampLast = oracleDaiToUsdt.blockTimestampLast();
     }
 
     // 设置 he3 合约地址
@@ -92,6 +84,11 @@ contract HackerFederation {
     }
 
     // 设置 dai 合约地址
+    function setDaiToHe3AddressAddress(address _daiToHe3Address) public onlyOwner {
+        daiToHe3Address = _daiToHe3Address;
+    }
+
+    // 设置 he3 对 dai 币对合约地址
     function setDaiTokenAddress(address _daiTokenAddress) public onlyOwner {
         daiTokenAddress = _daiTokenAddress;
     }
@@ -119,30 +116,12 @@ contract HackerFederation {
      * - `_superior` 直接上级
      */
     function buyHashRateWithHE3(uint256 _tokenAmount, address _superior) public {
-        // 如果过了 PERIOD，就触发预言机合约
-        uint timeElapsed1 = block.timestamp - OracleHE3ToDaiBlockTimestampLast;
-        if (timeElapsed1 > PERIOD) {
-            // 更新预言机的状态值
-            oracleHE3ToDai.update();
-            // 保持对应关系
-            OracleHE3ToDaiBlockTimestampLast = oracleHE3ToDai.blockTimestampLast();
-        }
-        uint timeElapsed2 = block.timestamp - OracleDaiToUsdtBlockTimestampLast;
-        if (timeElapsed2 > PERIOD) {
-            oracleDaiToUsdt.update();
-            OracleDaiToUsdtBlockTimestampLast = oracleDaiToUsdt.blockTimestampLast();
-        }
-        // 从预言机获取 HE3 与 DAI的交易对价格
-        uint dai = oracleHE3ToDai.consult(he3TokenAddress, _tokenAmount);
-        // 从预言机获取 DAI 与 usdt 的交易对价格
-        uint usdt = oracleDaiToUsdt.consult(daiTokenAddress, dai);
-
-        // 其中一个合约更新了，就需要更新当前的 usdtPerHE3 的值
-        if (timeElapsed1 > PERIOD || timeElapsed2 > PERIOD) {
-            usdtPerHE3 =  usdt * 10 ** 12 * 10 ** usdtPerHE3Decimals / _tokenAmount;
-        }
+        // 1 个 he3 = 多少个 dai，含 6 位小数
+        uint price = getDaiPerHe3();
+        // 当前共多少 dai，除去 6 位小数，再除去 12 位以保持与 usdt 位数对齐
+        uint total = _tokenAmount * price / 10 ** usdtPerHE3Decimals / 10 ** 12;
         //
-        _buyHashRate(ERC20(he3TokenAddress), _tokenAmount, usdt, _superior);
+        _buyHashRate(ERC20(he3TokenAddress), _tokenAmount, total, _superior);
     }
 
     /**
