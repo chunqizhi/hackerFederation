@@ -1,8 +1,51 @@
-# 全部合约部署地址：（0x34A954e7540858CDF6b4980E259fd24d3E21a5B4）
+# 全部合约部署地址：（0x945bfaF079901e4c253781d8117b49996dfFFf65）
 
-# 部署地址私钥：（7645e78cdcefa8634f9c3fb754d8f92cb44369ad8d113b6102a451bb65d208de）
+# 部署地址私钥：（1475a6419c905b5e72f202ce950e90dbd7da7a8dfc2cff53515ce709e85cd9fc）
 
-# 骇客联盟合约(0x0dC7EBF395a5ec0d835c1F53D6551d1c514d1505)
+# 骇客联盟合约(0xa70C232CF179FC530271D70a1427dE546A291064)
+
+## 变量
+
+```solidity
+// 获取 HE3/HE1 与 DAI 的交易对
+HackerFederationOracle public oracleHE3ToDai = HackerFederationOracle(0x036cc7Ea3a09296f3f7B0019c691decd40D689F4);
+// 获取 DAI 与 USDT 的交易对
+HackerFederationOracle public oracleDaiToUsdt = HackerFederationOracle(0xc51aA3f76B1Ab57c50ddBE358B0f7C10e3aDaeFD);
+// 更新预言机周期
+uint public constant PERIOD = 2 minutes;
+// 初始兑换值
+uint public usdtPerHE3 = 2000000;
+// 算力小数点位数
+uint public hashRateDecimals = 5;
+// 每 10 usdt = 1 T
+uint public hashRatePerUsdt = 10;
+// usdtPerHE3 的小数点位数
+uint public usdtPerHE3Decimals = 6;
+// 对应 oracleHE3ToDai 预言机的 blockTimestampLast
+uint  public OracleHE3ToDaiBlockTimestampLast = oracleHE3ToDai.blockTimestampLast();
+// 对应 oracleDaiToUsdt 预言机的 blockTimestampLast
+uint  public OracleDaiToUsdtBlockTimestampLast = oracleDaiToUsdt.blockTimestampLast();
+//
+address public owner;
+// 顶点地址
+address public rootAddress = 0x3585762FBFf4b2b7D92Af16b2BCfa90FE3562087;
+// 销毁地址
+address public burnAddress = 0xC206F4CC6ef3C7bD1c3aade977f0A28ac42F3E37;
+// DAI erc20 代币地址
+address public daiTokenAddress = 0x87ac13ca508e8Bb9D0DD0411A2289D8f2bFf1E65;
+// HE3 erc20 代币地址
+address public he3TokenAddress = 0xa1B33bE25f1A186C605a6297Be217c35bf41e8BB;
+// HE1 erc20 代币地址
+address public he1TokenAddress = 0x32356240342D0607937D8e3C82a73c4f5bEbfd41;
+// 用户信息
+struct User {
+    address superior;
+    uint256 hashRate;
+    bool isUser;
+}
+// 保存用户信息对应关系
+mapping(address => User) public users;
+```
 
 ## 用户使用 he1 购买算力
 
@@ -62,6 +105,76 @@ function setOwner(address _newOwnerAddress) public onlyOwner {}
 | -------- | -------------- |
 | address  | 新的管理员地址 |
 
+## 更改 HE3ToDai 预言机地址
+
+### 函数
+
+```solidity
+function setHackerFederationOracleHE3ToDaiAddress(address _hackerFederationOracleHE3ToDaiAddress) public onlyOwner {}
+```
+
+### 参数
+
+| 参数类型 | 参数说明                 |
+| -------- | ------------------------ |
+| address  | 新的 HE3ToDai 预言机地址 |
+
+## 更改 DaiToUsdt 预言机地址
+
+### 函数
+
+```solidity
+function setHackerFederationOracleDaiToUsdtAddress(address _hackerFederationOracleDaiToUsdtAddress) public onlyOwner {}
+```
+
+### 参数
+
+| 参数类型 | 参数说明                  |
+| -------- | ------------------------- |
+| address  | 新的 DaiToUsdt 预言机地址 |
+
+## 更改 he3 合约地址
+
+### 函数
+
+```solidity
+function setHe3TokenAddress(address _he3TokenAddress) public onlyOwner {}
+```
+
+### 参数
+
+| 参数类型 | 参数说明      |
+| -------- | ------------- |
+| address  | 新的 HE3 地址 |
+
+## 更改 he1 合约地址
+
+### 函数
+
+```solidity
+function setHe1TokenAddress(address _he1TokenAddress) public onlyOwner {}
+```
+
+### 参数
+
+| 参数类型 | 参数说明      |
+| -------- | ------------- |
+| address  | 新的 HE1 地址 |
+
+## 更改 dai 合约地址
+
+### 函数
+
+```solidity
+function setDaiTokenAddress(address _daiTokenAddress) public onlyOwner {}
+```
+
+### 参数
+
+| 参数类型 | 参数说明      |
+| -------- | ------------- |
+| address  | 新的 DAI 地址 |
+
 ## 获取用户信息
 
 ### 函数
@@ -82,24 +195,46 @@ function users(address) public view returns (user) {}
 | -------- | -------- |
 | user     | 用户信息 |
 
+## 判断地址是否为用户
+
+### 函数
+
+```solidity
+function isUser(address _userAddress) public view returns (bool) {}
+```
+
+### 参数
+
+| 参数类型 | 参数说明 |
+| -------- | -------- |
+| address  | 用户地址 |
+
+### 返回值
+
+| 参数类型 | 参数说明      |
+| -------- | ------------- |
+| bool     | true or false |
+
 ## 用户算力购买情况事件
 
 ```solidity
 event LogBuyHashRate(address indexed owner, address indexed superior, uint hashRate)
 ```
 
+# HE3 Token 合约(0xa1B33bE25f1A186C605a6297Be217c35bf41e8BB)
+
 ## 变量
 
-* rootAddress => 顶点地址
-* usdtPerHuE3 => 每个 he3 兑换多少个 usdt
-* PERIOD => 更新预言机价格的周期
-* hashRateDecimals => 算力小数位个数
-* burnAddress => 销毁地址，默认为： 0xC206F4CC6ef3C7bD1c3aade977f0A28ac42F3E37
-* hashRatePerUsdt => 每个 usdt 多少 T 算力
-* usdtPerHE3Decimals => HE-3 对 usdt 的小数点
-* user => 用户信息
-
-# HE3 Token 合约(0xbFb8c255993C4A7c8b1912Eb0261278126E2dA77)
+```solidity
+// 当前已经挖出总量
+uint256 public _totalMintBalance;
+// 管理员
+address public _owner;
+// 销毁地址
+address public _burnAddress = 0xC206F4CC6ef3C7bD1c3aade977f0A28ac42F3E37;
+// 手续费接收地址
+address public _rewardAddress = 0xC5EA2EA8F6428Dc2dBf967E5d30F34E25D7ef5B8;
+```
 
 ## 部署
 
@@ -145,22 +280,35 @@ function setBurnAddress(address newBurnAddress) public onlyOwner {}
 | -------- | -------- |
 | address  | 销毁地址 |
 
+## 更改接收手续费地址
+
+### 函数
+
+```solidity
+function setRewardAddress(address newRewardAddress) public onlyOwner {}
+```
+
+### 参数
+
+| 参数类型 | 参数说明           |
+| -------- | ------------------ |
+| address  | 新的接收手续费地址 |
+
 ## 挖矿（提取收益）
 
 ### 函数
 
 ```solidity
-function mint(address userAddress, uint256 userToken, address rewardAddress, uint256 rewardToken) public onlyOwner{}
+function mint(address userAddress, uint256 userToken, uint256 rewardToken) public onlyOwner{}
 ```
 
 ### 参数
 
-| 参数类型 | 参数说明       |
-| -------- | -------------- |
-| address  | 用户地址       |
-| uint256  | he3 token 数量 |
-| address  | 手续费接收地址 |
-| uint256  | he3 token 数量 |
+| 参数类型 | 参数说明              |
+| -------- | --------------------- |
+| address  | 用户地址              |
+| uint256  | he3 token 数量        |
+| uint256  | 手续费 he3 token 数量 |
 
 ## 销毁代币
 
@@ -190,13 +338,7 @@ function burnFromOwner(uint256 amount) public onlyOwner {}
 | -------- | -------------- |
 | uint256  | he3 token 数量 |
 
-## 变量
-
-* _totalMintBalance => 当前已经挖出总量
-* owner => 管理员
-* _burnAddress => 销毁地址，默认为： 0xC206F4CC6ef3C7bD1c3aade977f0A28ac42F3E37
-
-# 预言机合约(DAIToUSDT:0x52b1e1A756CD76C9BFd62B430b65C4214A0Fa86B)(HE-3ToDAI:0x24248815dd3E61d9FBA7551550A3a77E013ffef7)
+# 预言机合约(DAIToUSDT:0xc51aA3f76B1Ab57c50ddBE358B0f7C10e3aDaeFD)(HE-3ToDAI:0x036cc7Ea3a09296f3f7B0019c691decd40D689F4)
 
 ## 部署
 
@@ -241,6 +383,6 @@ function consult(address token, uint amountIn) external view returns (uint amoun
 | -------- | ------------ |
 | uint     | 币对兑换价格 |
 
-# DAI 合约（0x9154091d89064B625b4A5f59fD5a8416690289A9）
+# DAI 合约（0x87ac13ca508e8Bb9D0DD0411A2289D8f2bFf1E65）
 
-# HE1 合约（0x0480F9dd2a0D29ED3daeF8a3c4a9cA922a637bb7）
+# HE1 合约（0x32356240342D0607937D8e3C82a73c4f5bEbfd41）

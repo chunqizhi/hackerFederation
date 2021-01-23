@@ -1,4 +1,4 @@
-### 骇客联盟合约 abi（0x0dC7EBF395a5ec0d835c1F53D6551d1c514d1505）
+### 骇客联盟合约 abi（0xa70C232CF179FC530271D70a1427dE546A291064）
 
 ```abi
 [
@@ -31,19 +31,6 @@
 		],
 		"name": "LogBuyHashRate",
 		"type": "event"
-	},
-	{
-		"inputs": [],
-		"name": "HashRateDecimals",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
 	},
 	{
 		"inputs": [],
@@ -86,33 +73,7 @@
 	},
 	{
 		"inputs": [],
-		"name": "UsdtPerHE3",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "UsdtPerHE3Decimals",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "_burnAddress",
+		"name": "burnAddress",
 		"outputs": [
 			{
 				"internalType": "address",
@@ -161,12 +122,109 @@
 	},
 	{
 		"inputs": [],
+		"name": "daiTokenAddress",
+		"outputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "hashRateDecimals",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
 		"name": "hashRatePerUsdt",
 		"outputs": [
 			{
 				"internalType": "uint256",
 				"name": "",
 				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "he1TokenAddress",
+		"outputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "he3TokenAddress",
+		"outputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "_userAddress",
+				"type": "address"
+			}
+		],
+		"name": "isUser",
+		"outputs": [
+			{
+				"internalType": "bool",
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "oracleDaiToUsdt",
+		"outputs": [
+			{
+				"internalType": "contract HackerFederationOracle",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "oracleHE3ToDai",
+		"outputs": [
+			{
+				"internalType": "contract HackerFederationOracle",
+				"name": "",
+				"type": "address"
 			}
 		],
 		"stateMutability": "view",
@@ -186,10 +244,23 @@
 		"type": "function"
 	},
 	{
+		"inputs": [],
+		"name": "rootAddress",
+		"outputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
 		"inputs": [
 			{
 				"internalType": "address",
-				"name": "newBurnAddress",
+				"name": "_newBurnAddress",
 				"type": "address"
 			}
 		],
@@ -202,13 +273,104 @@
 		"inputs": [
 			{
 				"internalType": "address",
-				"name": "newOwnerAddress",
+				"name": "_daiTokenAddress",
+				"type": "address"
+			}
+		],
+		"name": "setDaiTokenAddress",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "_hackerFederationOracleDaiToUsdtAddress",
+				"type": "address"
+			}
+		],
+		"name": "setHackerFederationOracleDaiToUsdtAddress",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "_hackerFederationOracleHE3ToDaiAddress",
+				"type": "address"
+			}
+		],
+		"name": "setHackerFederationOracleHE3ToDaiAddress",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "_he1TokenAddress",
+				"type": "address"
+			}
+		],
+		"name": "setHe1TokenAddress",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "_he3TokenAddress",
+				"type": "address"
+			}
+		],
+		"name": "setHe3TokenAddress",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "_newOwnerAddress",
 				"type": "address"
 			}
 		],
 		"name": "setOwner",
 		"outputs": [],
 		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "usdtPerHE3",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "usdtPerHE3Decimals",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
 		"type": "function"
 	},
 	{
@@ -243,7 +405,7 @@
 ]
 ```
 
-### HE-1 合约 abi（0x0480F9dd2a0D29ED3daeF8a3c4a9cA922a637bb7）
+### HE-1 合约 abi（0x32356240342D0607937D8e3C82a73c4f5bEbfd41）
 
 ```abi
 [
@@ -636,7 +798,7 @@
 ]
 ```
 
-### HE-3 合约 abi（0xbFb8c255993C4A7c8b1912Eb0261278126E2dA77）
+### HE-3 合约 abi（0xa1B33bE25f1A186C605a6297Be217c35bf41e8BB）
 
 ```abi
 [
@@ -798,6 +960,32 @@
 				"internalType": "string",
 				"name": "",
 				"type": "string"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "_owner",
+		"outputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "_rewardAddress",
+		"outputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
 			}
 		],
 		"stateMutability": "view",
@@ -1009,11 +1197,6 @@
 				"type": "uint256"
 			},
 			{
-				"internalType": "address",
-				"name": "rewardAddress",
-				"type": "address"
-			},
-			{
 				"internalType": "uint256",
 				"name": "rewardToken",
 				"type": "uint256"
@@ -1032,19 +1215,6 @@
 				"internalType": "string",
 				"name": "",
 				"type": "string"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "owner",
-		"outputs": [
-			{
-				"internalType": "address",
-				"name": "",
-				"type": "address"
 			}
 		],
 		"stateMutability": "view",
@@ -1072,6 +1242,19 @@
 			}
 		],
 		"name": "setOwner",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "newRewardAddress",
+				"type": "address"
+			}
+		],
+		"name": "setRewardAddress",
 		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"
