@@ -7,13 +7,13 @@ import "https://github.com/chunqizhi/hackerLeague/blob/main/hackerFederationOrac
 
 contract HackerFederation {
     // 获取 HE3/HE1 与 DAI 的交易对
-    HackerFederationOracle public oracleHE3ToDai = HackerFederationOracle(0x24248815dd3E61d9FBA7551550A3a77E013ffef7);
+    HackerFederationOracle public oracleHE3ToDai = HackerFederationOracle(0x036cc7Ea3a09296f3f7B0019c691decd40D689F4);
     // 获取 DAI 与 USDT 的交易对
-    HackerFederationOracle public oracleDaiToUsdt = HackerFederationOracle(0x24248815dd3E61d9FBA7551550A3a77E013ffef7);
+    HackerFederationOracle public oracleDaiToUsdt = HackerFederationOracle(0xc51aA3f76B1Ab57c50ddBE358B0f7C10e3aDaeFD);
     // 更新预言机周期
     uint public constant PERIOD = 2 minutes;
     // 初始兑换值
-    uint public usdtPerHE3 = 4000000;
+    uint public usdtPerHE3 = 2000000;
     // 算力小数点位数
     uint public hashRateDecimals = 5;
     // 每 10 usdt = 1 T
@@ -31,11 +31,11 @@ contract HackerFederation {
     // 销毁地址
     address public burnAddress = 0xC206F4CC6ef3C7bD1c3aade977f0A28ac42F3E37;
     // DAI erc20 代币地址
-    address public daiTokenAddress = 0x9154091d89064B625b4A5f59fD5a8416690289A9;
-    // HE1 erc20 代币地址
-    address public he1TokenAddress = 0x0480F9dd2a0D29ED3daeF8a3c4a9cA922a637bb7;
+    address public daiTokenAddress = 0x87ac13ca508e8Bb9D0DD0411A2289D8f2bFf1E65;
     // HE3 erc20 代币地址
-    address public he3TokenAddress = 0xbFb8c255993C4A7c8b1912Eb0261278126E2dA77;
+    address public he3TokenAddress = 0xa1B33bE25f1A186C605a6297Be217c35bf41e8BB;
+    // HE1 erc20 代币地址
+    address public he1TokenAddress = 0x32356240342D0607937D8e3C82a73c4f5bEbfd41;
     // 用户信息
     struct User {
         address superior;
@@ -48,11 +48,9 @@ contract HackerFederation {
     // 用户算力购买情况事件
     event LogBuyHashRate(address indexed owner, address indexed superior, uint hashRate);
 
-    constructor(address _rootAddress) public {
+    constructor() public {
         //
         owner = msg.sender;
-        //
-        rootAddress = _rootAddress;
     }
 
     // 函数修改器，只有 owner 满足条件
