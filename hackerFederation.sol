@@ -27,7 +27,7 @@ contract HackerFederation {
     //
     address public owner;
     // 顶点地址
-    address public rootAddress;
+    address public rootAddress = 0x3585762FBFf4b2b7D92Af16b2BCfa90FE3562087;
     // 销毁地址
     address public burnAddress = 0xC206F4CC6ef3C7bD1c3aade977f0A28ac42F3E37;
     // DAI erc20 代币地址
