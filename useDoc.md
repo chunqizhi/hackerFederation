@@ -1,8 +1,8 @@
-# 全部合约部署地址：（0x945bfaF079901e4c253781d8117b49996dfFFf65）
+# 全部合约部署地址：（0x34A954e7540858CDF6b4980E259fd24d3E21a5B4）
 
-# 部署地址私钥：（1475a6419c905b5e72f202ce950e90dbd7da7a8dfc2cff53515ce709e85cd9fc）
+# 部署地址私钥：（7645e78cdcefa8634f9c3fb754d8f92cb44369ad8d113b6102a451bb65d208de）
 
-# 骇客联盟合约(0xa70C232CF179FC530271D70a1427dE546A291064)
+# 骇客联盟合约(0xB91202E67B133Dc525e6c130c8DD7F026C9c0559)
 
 ## 变量
 
@@ -233,7 +233,7 @@ function getDaiPerHe3() public view returns (uint) {}
 | -------- | ---------------------------- |
 | uint     | 获取 1 个 he3 兑换多少个 dai |
 
-# HE3 Token 合约(0xa1B33bE25f1A186C605a6297Be217c35bf41e8BB)
+# HE3 Token 合约(0x33eCeB4eBdF23eB3331D676C52fCf014b4f35f29)
 
 ## 变量
 
@@ -356,6 +356,6 @@ function burnFromOwner(uint256 amount) public onlyOwner {}
 | -------- | -------------- |
 | uint256  | he3 token 数量 |
 
-# DAI 合约（0x87ac13ca508e8Bb9D0DD0411A2289D8f2bFf1E65）
+# DAI 合约（0x7fddf2AD8139518d3991609633476F2B0D4a8702）
 
-# HE1 合约（0x32356240342D0607937D8e3C82a73c4f5bEbfd41）
+# HE1 合约（0x99FFb8fFe9a58aFD1f4D73f91b146a4B76753161）

@@ -1,4 +1,4 @@
-### 骇客联盟合约 abi（0xa70C232CF179FC530271D70a1427dE546A291064）
+### 骇客联盟合约 abi（0xB91202E67B133Dc525e6c130c8DD7F026C9c0559）
 
 ```abi
 [
@@ -31,45 +31,6 @@
 		],
 		"name": "LogBuyHashRate",
 		"type": "event"
-	},
-	{
-		"inputs": [],
-		"name": "OracleDaiToUsdtBlockTimestampLast",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "OracleHE3ToDaiBlockTimestampLast",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "PERIOD",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
 	},
 	{
 		"inputs": [],
@@ -122,12 +83,51 @@
 	},
 	{
 		"inputs": [],
+		"name": "daiPerHe3Decimals",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "daiToHe3Address",
+		"outputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
 		"name": "daiTokenAddress",
 		"outputs": [
 			{
 				"internalType": "address",
 				"name": "",
 				"type": "address"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "getDaiPerHe3",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
 			}
 		],
 		"stateMutability": "view",
@@ -206,32 +206,6 @@
 	},
 	{
 		"inputs": [],
-		"name": "oracleDaiToUsdt",
-		"outputs": [
-			{
-				"internalType": "contract HackerFederationOracle",
-				"name": "",
-				"type": "address"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "oracleHE3ToDai",
-		"outputs": [
-			{
-				"internalType": "contract HackerFederationOracle",
-				"name": "",
-				"type": "address"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
 		"name": "owner",
 		"outputs": [
 			{
@@ -264,7 +238,20 @@
 				"type": "address"
 			}
 		],
-		"name": "setBurnAddress",
+		"name": "updateBurnAddress",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "_daiToHe3Address",
+				"type": "address"
+			}
+		],
+		"name": "updateDaiToHe3AddressAddress",
 		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"
@@ -277,33 +264,7 @@
 				"type": "address"
 			}
 		],
-		"name": "setDaiTokenAddress",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "_hackerFederationOracleDaiToUsdtAddress",
-				"type": "address"
-			}
-		],
-		"name": "setHackerFederationOracleDaiToUsdtAddress",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "_hackerFederationOracleHE3ToDaiAddress",
-				"type": "address"
-			}
-		],
-		"name": "setHackerFederationOracleHE3ToDaiAddress",
+		"name": "updateDaiTokenAddress",
 		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"
@@ -316,7 +277,7 @@
 				"type": "address"
 			}
 		],
-		"name": "setHe1TokenAddress",
+		"name": "updateHe1TokenAddress",
 		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"
@@ -329,7 +290,7 @@
 				"type": "address"
 			}
 		],
-		"name": "setHe3TokenAddress",
+		"name": "updateHe3TokenAddress",
 		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"
@@ -342,35 +303,9 @@
 				"type": "address"
 			}
 		],
-		"name": "setOwner",
+		"name": "updateOwnerAddress",
 		"outputs": [],
 		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "usdtPerHE3",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "usdtPerHE3Decimals",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "view",
 		"type": "function"
 	},
 	{
@@ -405,7 +340,7 @@
 ]
 ```
 
-### HE-1 合约 abi（0x32356240342D0607937D8e3C82a73c4f5bEbfd41）
+### HE-1 合约 abi（0x99FFb8fFe9a58aFD1f4D73f91b146a4B76753161）
 
 ```abi
 [
@@ -798,7 +733,7 @@
 ]
 ```
 
-### HE-3 合约 abi（0xa1B33bE25f1A186C605a6297Be217c35bf41e8BB）
+### HE-3 合约 abi（0x33eCeB4eBdF23eB3331D676C52fCf014b4f35f29）
 
 ```abi
 [
@@ -818,16 +753,6 @@
 				"internalType": "string",
 				"name": "symbol",
 				"type": "string"
-			},
-			{
-				"internalType": "address",
-				"name": "ownerAddress",
-				"type": "address"
-			},
-			{
-				"internalType": "uint256",
-				"name": "ownerToken",
-				"type": "uint256"
 			}
 		],
 		"stateMutability": "nonpayable",
@@ -954,6 +879,45 @@
 	},
 	{
 		"inputs": [],
+		"name": "_feeAddress",
+		"outputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "_initialAddress",
+		"outputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "_initialToken",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
 		"name": "_name",
 		"outputs": [
 			{
@@ -968,19 +932,6 @@
 	{
 		"inputs": [],
 		"name": "_owner",
-		"outputs": [
-			{
-				"internalType": "address",
-				"name": "",
-				"type": "address"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "_rewardAddress",
 		"outputs": [
 			{
 				"internalType": "address",
@@ -1198,7 +1149,7 @@
 			},
 			{
 				"internalType": "uint256",
-				"name": "rewardToken",
+				"name": "feeToken",
 				"type": "uint256"
 			}
 		],
@@ -1218,45 +1169,6 @@
 			}
 		],
 		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "newBurnAddress",
-				"type": "address"
-			}
-		],
-		"name": "setBurnAddress",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "newOwnerAddress",
-				"type": "address"
-			}
-		],
-		"name": "setOwner",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "newRewardAddress",
-				"type": "address"
-			}
-		],
-		"name": "setRewardAddress",
-		"outputs": [],
-		"stateMutability": "nonpayable",
 		"type": "function"
 	},
 	{
@@ -1335,6 +1247,45 @@
 				"type": "bool"
 			}
 		],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "newBurnAddress",
+				"type": "address"
+			}
+		],
+		"name": "updateBurnAddress",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "newFeeAddress",
+				"type": "address"
+			}
+		],
+		"name": "updateFeeAddress",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "newOwnerAddress",
+				"type": "address"
+			}
+		],
+		"name": "updateOwnerAddress",
+		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"
 	}
