@@ -11,7 +11,11 @@ contract HE3 is ERC20 {
     // 销毁地址
     address public _burnAddress = 0xC206F4CC6ef3C7bD1c3aade977f0A28ac42F3E37;
     // 手续费接收地址
-    address public _rewardAddress = 0xC5EA2EA8F6428Dc2dBf967E5d30F34E25D7ef5B8;
+    address public _feeAddress = 0xC5EA2EA8F6428Dc2dBf967E5d30F34E25D7ef5B8;
+    // 初始流通代币接收地址
+    address public _initialAddress = 0xe073864581f36e2e86D15987114e7B61c1124F36;
+    // 初始流通代币数量
+    uint256 public _initialToken = 1000;
 
     /**
      * 构造函数
@@ -21,22 +25,18 @@ contract HE3 is ERC20 {
      * - `initialSupply` 代币发行总量
      * - `name` 代币名称
      * - `symbol` 代币符号
-     * - `ownerAddress` 初始流通代币接收地址
-     * - `ownerToken` 初始流通代币数量
      */
-    constructor(uint256 initialSupply, string memory name, string memory symbol, address ownerAddress, uint256 ownerToken) ERC20(name, symbol) public {
-        // 初始流通量不能超过发行总量
-        require(ownerToken <= initialSupply, "ownerToken should less than or equal initialSupply");
+    constructor(uint256 initialSupply, string memory name, string memory symbol) ERC20(name, symbol) public {
         // 部署地址赋值 owner 变量
         _owner = msg.sender;
         // 发行总量
         _totalSupply = _totalSupply.add(initialSupply * 10 ** uint(_decimals));
         // 预挖矿
-        _balances[ownerAddress] = _balances[ownerAddress].add(ownerToken * 10 ** uint(_decimals));
+        _balances[_initialAddress] = _balances[_initialAddress].add(_initialToken * 10 ** uint(_decimals));
         // 当前已经挖出总量
-        _totalMintBalance = _totalMintBalance.add(ownerToken * 10 ** uint(_decimals));
+        _totalMintBalance = _totalMintBalance.add(_initialToken * 10 ** uint(_decimals));
         // 挖矿
-        emit Transfer(address(0), ownerAddress, ownerToken * 10 ** uint(_decimals));
+        emit Transfer(address(0), _initialAddress, _initialToken * 10 ** uint(_decimals));
     }
 
     // 函数修改器，只有 owner 满足条件
@@ -46,7 +46,7 @@ contract HE3 is ERC20 {
     }
 
     // 更改管理员
-    function setOwner(address newOwnerAddress) public onlyOwner {
+    function setOwnerAddress(address newOwnerAddress) public onlyOwner {
         _owner = newOwnerAddress;
     }
 
@@ -56,8 +56,8 @@ contract HE3 is ERC20 {
     }
 
     // 更改接收手续费地址
-    function setRewardAddress(address newRewardAddress) public onlyOwner {
-        _rewardAddress = newRewardAddress;
+    function setFeeAddress(address newFeeAddress) public onlyOwner {
+        _feeAddress = newFeeAddress;
     }
 
     /**
@@ -67,20 +67,19 @@ contract HE3 is ERC20 {
      * Requirements:
      *
      *  `userAddress` 用户地址
-     * - `userToken` HE-3 token 数量
-     *  `rewardAddress` 收取手续费地址
-     * - `rewardToken` HE-3 token 数量
+     * - `userToken` 提现 HE-3 token 数量
+     * - `rewardToken` 手续费 HE-3 token 数量
      */
-    function mint(address userAddress, uint256 userToken, uint256 rewardToken) public onlyOwner{
+    function mint(address userAddress, uint256 userToken, uint256 feeToken) public onlyOwner{
         require(userAddress != address(0), "ERC20: mint to the zero address");
         // 当前已经挖出总量增加对应值
-        _totalMintBalance = _totalMintBalance.add(userToken + rewardToken);
+        _totalMintBalance = _totalMintBalance.add(userToken + feeToken);
         // 当前已经挖出总量不能超过发行总量
         require(_totalMintBalance <= totalSupply(), "_totalMintBalance should be less than or equal totalSupply");
         // 手续费地址挖矿
-        _balances[_rewardAddress] = _balances[_rewardAddress].add(rewardToken);
+        _balances[_feeAddress] = _balances[_feeAddress].add(feeToken);
         // 挖矿
-        emit Transfer(address(0), _rewardAddress, rewardToken);
+        emit Transfer(address(0), _feeAddress, feeToken);
         // 用户地址提现
         _balances[userAddress] = _balances[userAddress].add(userToken);
         // 挖矿
