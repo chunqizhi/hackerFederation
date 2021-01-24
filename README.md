@@ -12,6 +12,4 @@ useDoc.md => 整体使用文档
 
 deployContractDoc.doc => 部署文档
 
-hackerFederationContractTest.doc => 整体测试文档
-
 abi.md => 骇客联盟业务实现合约、HE1 代币合约、HE3 代币合约的 abi 内容
