@@ -1,10 +1,12 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.6.0;
 
-import "https://github.com/chunqizhi/openzeppelin-contracts/blob/zcq/contracts/token/ERC20/ERC20.sol";
-
 interface Balance {
     function balanceOf(address account) external view returns (uint256);
+}
+
+interface TransferFrom {
+    function transferFrom(address sender, address recipient, uint256 amount) external returns (bool);
 }
 
 contract HackerFederation {
@@ -67,7 +69,7 @@ contract HackerFederation {
      * - `_superior` 直接上级
      */
     function buyHashRateWithHE1(uint256 _tokenAmount, address _superior) public {
-        _buyHashRate(ERC20(he1TokenAddress), _tokenAmount, _tokenAmount, _superior);
+        _buyHashRate(he1TokenAddress, _tokenAmount, _tokenAmount, _superior);
     }
 
     /**
@@ -85,7 +87,7 @@ contract HackerFederation {
         // 当前共多少 dai，除去 6 位小数，再除去 12 位以保持与 usdt 位数对齐
         uint total = _tokenAmount * price / 10 ** daiPerHe3Decimals / 10 ** 12;
         //
-        _buyHashRate(ERC20(he3TokenAddress), _tokenAmount, total, _superior);
+        _buyHashRate(he3TokenAddress, _tokenAmount, total, _superior);
     }
 
     /**
@@ -99,18 +101,18 @@ contract HackerFederation {
      * - `_usdtAmount` _tokenAmount 与 usdt 的价格
      * - `_superior` 直接上级
      */
-    function _buyHashRate(ERC20 _tokenAddress,uint _tokenAmount, uint256 _usdtAmount, address _superior) internal {
+    function _buyHashRate(address _tokenAddress,uint _tokenAmount, uint256 _usdtAmount, address _superior) internal {
         // 判断上级是否是 user 或 rootAddress，如果都不是，抛出错误
         if (!(users[_superior].isUser || _superior == rootAddress)) {
             require(users[_superior].isUser, "Superior should be a user or rootAddress");
         }
         // 是否拥有 _amount 数量的 _token 代币
-        require(
-            _tokenAddress.allowance(msg.sender, address(this)) >= _tokenAmount,
-            "Token allowance too low"
-        );
+        //        require(
+        //            _tokenAddress.allowance(msg.sender, address(this)) >= _tokenAmount,
+        //            "Token allowance too low"
+        //        );
         // 销毁对应的代币
-        bool sent = _tokenAddress.transferFrom(msg.sender, burnAddress, _tokenAmount);
+        bool sent = TransferFrom(_tokenAddress).transferFrom(msg.sender, burnAddress, _tokenAmount);
         require(sent, "Token transfer failed");
         // 10 000000 USDT = 1 00000T, 10 为小数点
         // 计算当前能买多少算力
