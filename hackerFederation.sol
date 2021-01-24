@@ -12,8 +12,8 @@ contract HackerFederation {
     uint public hashRateDecimals = 5;
     // 每 10 usdt = 1 T
     uint public hashRatePerUsdt = 10;
-    // usdtPerHE3 的小数点位数
-    uint public usdtPerHE3Decimals = 6;
+    // daiPerHe3 的小数点位数
+    uint public daiPerHe3Decimals = 6;
     //
     address public owner;
     // 顶点地址
@@ -57,42 +57,6 @@ contract HackerFederation {
         _;
     }
 
-    // 1 : 2 = he3 : dai
-    // 1 he3 = 2 dai
-    function getDaiPerHe3() public view returns (uint) {
-        return balanceDai.balanceOf(daiToHe3Address) * 10 ** usdtPerHE3Decimals / balanceHe3.balanceOf(daiToHe3Address);
-    }
-
-    // 更改管理员
-    function setOwner(address _newOwnerAddress) public onlyOwner {
-        owner = _newOwnerAddress;
-    }
-
-    // 更改销毁地址
-    function setBurnAddress(address _newBurnAddress) public onlyOwner {
-        burnAddress = _newBurnAddress;
-    }
-
-    // 设置 he3 合约地址
-    function setHe3TokenAddress(address _he3TokenAddress) public onlyOwner {
-        he3TokenAddress = _he3TokenAddress;
-    }
-
-    // 设置 he1 合约地址
-    function setHe1TokenAddress(address _he1TokenAddress) public onlyOwner {
-        he1TokenAddress = _he1TokenAddress;
-    }
-
-    // 设置 dai 合约地址
-    function setDaiToHe3AddressAddress(address _daiToHe3Address) public onlyOwner {
-        daiToHe3Address = _daiToHe3Address;
-    }
-
-    // 设置 he3 对 dai 币对合约地址
-    function setDaiTokenAddress(address _daiTokenAddress) public onlyOwner {
-        daiTokenAddress = _daiTokenAddress;
-    }
-
     /**
      * 用户使用 he1 购买算力
      * 需要该用户拥有 HE-1 代币
@@ -119,7 +83,7 @@ contract HackerFederation {
         // 1 个 he3 = 多少个 dai，含 6 位小数
         uint price = getDaiPerHe3();
         // 当前共多少 dai，除去 6 位小数，再除去 12 位以保持与 usdt 位数对齐
-        uint total = _tokenAmount * price / 10 ** usdtPerHE3Decimals / 10 ** 12;
+        uint total = _tokenAmount * price / 10 ** daiPerHe3Decimals / 10 ** 12;
         //
         _buyHashRate(ERC20(he3TokenAddress), _tokenAmount, total, _superior);
     }
@@ -167,6 +131,38 @@ contract HackerFederation {
         emit LogBuyHashRate(msg.sender, _superior, hashRate);
     }
 
+    // 更新管理员地址
+    function updateOwnerAddress(address _newOwnerAddress) public onlyOwner {
+        owner = _newOwnerAddress;
+    }
+
+    // 更新销毁地址
+    function updateBurnAddress(address _newBurnAddress) public onlyOwner {
+        burnAddress = _newBurnAddress;
+    }
+
+    // 更新 he3 合约地址
+    function updateHe3TokenAddress(address _he3TokenAddress) public onlyOwner {
+        he3TokenAddress = _he3TokenAddress;
+        balanceHe3 = Balance(he3TokenAddress);
+    }
+
+    // 更新 he1 合约地址
+    function updateHe1TokenAddress(address _he1TokenAddress) public onlyOwner {
+        he1TokenAddress = _he1TokenAddress;
+    }
+
+    // 更新 dai 合约地址
+    function updateDaiToHe3AddressAddress(address _daiToHe3Address) public onlyOwner {
+        daiToHe3Address = _daiToHe3Address;
+    }
+
+    // 更新 he3 对 dai 币对合约地址
+    function updateDaiTokenAddress(address _daiTokenAddress) public onlyOwner {
+        daiTokenAddress = _daiTokenAddress;
+        balanceDai = Balance(daiTokenAddress);
+    }
+
     /**
      * 判断该地址是否为用户
      *
@@ -176,5 +172,12 @@ contract HackerFederation {
      */
     function isUser(address _userAddress) public view returns (bool) {
         return users[_userAddress].isUser;
+    }
+
+    // 1 : 2 = he3 : dai
+    // 1 he3 = 2 dai
+    // 获取 1 个 he3 兑换多少个 dai
+    function getDaiPerHe3() public view returns (uint) {
+        return balanceDai.balanceOf(daiToHe3Address) * 10 ** daiPerHe3Decimals / balanceHe3.balanceOf(daiToHe3Address);
     }
 }

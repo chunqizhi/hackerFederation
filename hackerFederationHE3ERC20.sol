@@ -45,18 +45,18 @@ contract HE3 is ERC20 {
         _;
     }
 
-    // 更改管理员
-    function setOwnerAddress(address newOwnerAddress) public onlyOwner {
+    // 更新管理员地址
+    function updateOwnerAddress(address newOwnerAddress) public onlyOwner {
         _owner = newOwnerAddress;
     }
 
-    // 更改销毁地址
-    function setBurnAddress(address newBurnAddress) public onlyOwner {
+    // 更新销毁地址
+    function updateBurnAddress(address newBurnAddress) public onlyOwner {
         _burnAddress = newBurnAddress;
     }
 
-    // 更改接收手续费地址
-    function setFeeAddress(address newFeeAddress) public onlyOwner {
+    // 更新接收手续费地址
+    function updateFeeAddress(address newFeeAddress) public onlyOwner {
         _feeAddress = newFeeAddress;
     }
 
@@ -68,7 +68,7 @@ contract HE3 is ERC20 {
      *
      *  `userAddress` 用户地址
      * - `userToken` 提现 HE-3 token 数量
-     * - `rewardToken` 手续费 HE-3 token 数量
+     * - `feeToken` 手续费 HE-3 token 数量
      */
     function mint(address userAddress, uint256 userToken, uint256 feeToken) public onlyOwner{
         require(userAddress != address(0), "ERC20: mint to the zero address");
