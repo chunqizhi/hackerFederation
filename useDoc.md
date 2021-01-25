@@ -356,6 +356,5 @@ function burnFromOwner(uint256 amount) public onlyOwner {}
 | -------- | -------------- |
 | uint256  | he3 token 数量 |
 
-# DAI 合约（0x7fddf2AD8139518d3991609633476F2B0D4a8702）
 
 # HE1 合约（0x99FFb8fFe9a58aFD1f4D73f91b146a4B76753161）
