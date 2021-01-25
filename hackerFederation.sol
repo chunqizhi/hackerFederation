@@ -3,11 +3,8 @@ pragma solidity ^0.6.6;
 
 import 'https://github.com/OpenZeppelin/openzeppelin-contracts/blob/v3.0.0/contracts/math/SafeMath.sol';
 
-interface Balance {
+interface Token {
     function balanceOf(address account) external view returns (uint256);
-}
-
-interface TransferFrom {
     function transferFrom(address sender, address recipient, uint256 amount) external returns (bool);
 }
 
@@ -28,17 +25,17 @@ contract HackerFederation {
     address public burnAddress = 0xC206F4CC6ef3C7bD1c3aade977f0A28ac42F3E37;
 
     // dai 对 he3 币对 address
-    address public daiToHe3Address = address(0x00a51d3b6b1a8e3941751b10ce310258651d9dd5e3);
+    address public daiToHe3Address = address(0x00089b20bbded1cb479459969e3863cb6bf64edc9f);
 
     // Dai erc20 代币地址
-    address public daiTokenAddress = 0xE00757a0251c2D9CD20314d8721AC0B2a32F1c9D;
-    Balance balanceDai = Balance(daiTokenAddress);
+    address public daiTokenAddress = 0x22d5C3DeD529F9BE1083E5b44f8De7975B721348;
+    Token tokenDai = Token(daiTokenAddress);
     // HE3 erc20 代币地址
-    address public he3TokenAddress = 0xd9d3A935090BF031977427954b15b818e058b1FC;
-    Balance balanceHe3 = Balance(he3TokenAddress);
+    address public he3TokenAddress = 0x7a9064552D247a8c3a43d3d5aA60C73F766da8b5;
+    Token tokenHe3 = Token(he3TokenAddress);
 
     // HE1 erc20 代币地址
-    address public he1TokenAddress = 0x489D5df0f0b2535EB5a5e65Cd20AdaCCf49ceBa1;
+    address public he1TokenAddress = 0xF72e4d8B029c4fC6a97c59EC3AF33b2cCcC52715;
 
     // 用户信息
     struct User {
@@ -111,7 +108,7 @@ contract HackerFederation {
             require(false, "Superior should be a user or rootAddress");
         }
         // 销毁对应的代币
-        bool sent = TransferFrom(_tokenAddress).transferFrom(msg.sender, burnAddress, _tokenAmount);
+        bool sent = Token(_tokenAddress).transferFrom(msg.sender, burnAddress, _tokenAmount);
         require(sent, "Token transfer failed");
         // 10 000000 USDT = 1 00000T, 10 为小数点
         // 计算当前能买多少算力
@@ -145,7 +142,7 @@ contract HackerFederation {
     // 更新 he3 合约地址
     function updateHe3TokenAddress(address _he3TokenAddress) public onlyOwner {
         he3TokenAddress = _he3TokenAddress;
-        balanceHe3 = Balance(he3TokenAddress);
+        tokenHe3 = Token(he3TokenAddress);
     }
 
     // 更新 he1 合约地址
@@ -161,7 +158,7 @@ contract HackerFederation {
     // 更新 he3 对 dai 币对合约地址
     function updateDaiTokenAddress(address _daiTokenAddress) public onlyOwner {
         daiTokenAddress = _daiTokenAddress;
-        balanceDai = Balance(daiTokenAddress);
+        tokenDai = Token(daiTokenAddress);
     }
 
     /**
@@ -179,6 +176,6 @@ contract HackerFederation {
     // 1 he3 = 2 dai
     // 获取 1 个 he3 兑换多少个 dai
     function getDaiPerHe3() public view returns (uint256) {
-        return balanceDai.balanceOf(daiToHe3Address).mul(10 ** daiPerHe3Decimals).div(balanceHe3.balanceOf(daiToHe3Address));
+        return tokenDai.balanceOf(daiToHe3Address).mul(10 ** daiPerHe3Decimals).div(tokenHe3.balanceOf(daiToHe3Address));
     }
 }
