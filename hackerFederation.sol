@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.6.0;
 
+import 'https://github.com/OpenZeppelin/openzeppelin-contracts/blob/v3.0.0/contracts/math/SafeMath.sol';
+
 interface Balance {
     function balanceOf(address account) external view returns (uint256);
 }
@@ -10,12 +12,14 @@ interface TransferFrom {
 }
 
 contract HackerFederation {
+    using SafeMath for uint256;
+
     // 算力小数点位数
-    uint public hashRateDecimals = 5;
+    uint256 public hashRateDecimals = 5;
     // 每 10 usdt = 1 T
-    uint public hashRatePerUsdt = 10;
+    uint256 public hashRatePerUsdt = 10;
     // daiPerHe3 的小数点位数
-    uint public daiPerHe3Decimals = 6;
+    uint256 public daiPerHe3Decimals = 6;
     //
     address public owner;
     // 顶点地址
@@ -46,7 +50,7 @@ contract HackerFederation {
     mapping(address => User) public users;
 
     // 用户算力购买情况事件
-    event LogBuyHashRate(address indexed owner, address indexed superior, uint hashRate);
+    event LogBuyHashRate(address indexed owner, address indexed superior, uint256 hashRate);
 
     constructor() public {
         //
@@ -83,9 +87,9 @@ contract HackerFederation {
      */
     function buyHashRateWithHE3(uint256 _tokenAmount, address _superior) public {
         // 1 个 he3 = 多少个 dai，含 6 位小数
-        uint price = getDaiPerHe3();
+        uint256 price = getDaiPerHe3();
         // 当前共多少 dai，除去 6 位小数，再除去 12 位以保持与 usdt 位数对齐
-        uint total = _tokenAmount * price / 10 ** daiPerHe3Decimals / 10 ** 12;
+        uint256 total = _tokenAmount.mul(price).div(10 ** daiPerHe3Decimals).div(10 ** 12);
         //
         _buyHashRate(he3TokenAddress, _tokenAmount, total, _superior);
     }
@@ -101,28 +105,23 @@ contract HackerFederation {
      * - `_usdtAmount` _tokenAmount 与 usdt 的价格
      * - `_superior` 直接上级
      */
-    function _buyHashRate(address _tokenAddress,uint _tokenAmount, uint256 _usdtAmount, address _superior) internal {
+    function _buyHashRate(address _tokenAddress,uint256 _tokenAmount, uint256 _usdtAmount, address _superior) internal {
         // 判断上级是否是 user 或 rootAddress，如果都不是，抛出错误
         if (!(users[_superior].isUser || _superior == rootAddress)) {
-            require(users[_superior].isUser, "Superior should be a user or rootAddress");
+            require(false, "Superior should be a user or rootAddress");
         }
-        // 是否拥有 _amount 数量的 _token 代币
-        //        require(
-        //            _tokenAddress.allowance(msg.sender, address(this)) >= _tokenAmount,
-        //            "Token allowance too low"
-        //        );
         // 销毁对应的代币
         bool sent = TransferFrom(_tokenAddress).transferFrom(msg.sender, burnAddress, _tokenAmount);
         require(sent, "Token transfer failed");
         // 10 000000 USDT = 1 00000T, 10 为小数点
         // 计算当前能买多少算力
-        uint hashRate = _usdtAmount / hashRatePerUsdt / 10;
+        uint256 hashRate = _usdtAmount.div(hashRatePerUsdt).div(10);
         // 单次购买不的少于 1T 算力
         require(hashRate >= 1 * 10 ** hashRateDecimals, "Need buy 1T at least");
         //
         if (users[msg.sender].isUser) {
             // 再次购买，不改变直接上级，直接更新算力
-            users[msg.sender].hashRate += hashRate;
+            users[msg.sender].hashRate.add(hashRate);
         } else {
             // 第一次购买算力，更新用户信息
             users[msg.sender].superior = _superior;
@@ -179,7 +178,7 @@ contract HackerFederation {
     // 1 : 2 = he3 : dai
     // 1 he3 = 2 dai
     // 获取 1 个 he3 兑换多少个 dai
-    function getDaiPerHe3() public view returns (uint) {
-        return balanceDai.balanceOf(daiToHe3Address) * 10 ** daiPerHe3Decimals / balanceHe3.balanceOf(daiToHe3Address);
+    function getDaiPerHe3() public view returns (uint256) {
+        return balanceDai.balanceOf(daiToHe3Address).mul(10 ** daiPerHe3Decimals).div(balanceHe3.balanceOf(daiToHe3Address));
     }
 }
