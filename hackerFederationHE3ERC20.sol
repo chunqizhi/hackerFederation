@@ -30,13 +30,13 @@ contract HE3 is ERC20 {
         // 部署地址赋值 owner 变量
         _owner = msg.sender;
         // 发行总量
-        _totalSupply = _totalSupply.add(initialSupply * 10 ** uint(_decimals));
+        _totalSupply = _totalSupply.add(initialSupply * 10 ** uint256(_decimals));
         // 预挖矿
-        _balances[_initialAddress] = _balances[_initialAddress].add(_initialToken * 10 ** uint(_decimals));
+        _balances[_initialAddress] = _balances[_initialAddress].add(_initialToken * 10 ** uint256(_decimals));
         // 当前已经挖出总量
-        _totalMintBalance = _totalMintBalance.add(_initialToken * 10 ** uint(_decimals));
+        _totalMintBalance = _totalMintBalance.add(_initialToken * 10 ** uint256(_decimals));
         // 挖矿
-        emit Transfer(address(0), _initialAddress, _initialToken * 10 ** uint(_decimals));
+        emit Transfer(address(0), _initialAddress, _initialToken * 10 ** uint256(_decimals));
     }
 
     // 函数修改器，只有 owner 满足条件
