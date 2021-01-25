@@ -38,7 +38,7 @@ contract HackerFederation {
     Balance balanceHe3 = Balance(he3TokenAddress);
 
     // HE1 erc20 代币地址
-    address public he1TokenAddress = 0xd9d3A935090BF031977427954b15b818e058b1FC;
+    address public he1TokenAddress = 0x489D5df0f0b2535EB5a5e65Cd20AdaCCf49ceBa1;
 
     // 用户信息
     struct User {
@@ -121,7 +121,7 @@ contract HackerFederation {
         //
         if (users[msg.sender].isUser) {
             // 再次购买，不改变直接上级，直接更新算力
-            users[msg.sender].hashRate.add(hashRate);
+            users[msg.sender].hashRate = users[msg.sender].hashRate.add(hashRate);
         } else {
             // 第一次购买算力，更新用户信息
             users[msg.sender].superior = _superior;
