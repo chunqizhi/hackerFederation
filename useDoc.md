@@ -2,41 +2,39 @@
 
 # 部署地址私钥：（7645e78cdcefa8634f9c3fb754d8f92cb44369ad8d113b6102a451bb65d208de）
 
-# 骇客联盟合约(0xB91202E67B133Dc525e6c130c8DD7F026C9c0559)
+# 骇客联盟合约(0x629a33cE67ac63b7d2f668a99fAfd26e5DB8B622)
 
 ## 变量
 
 ```solidity
-    // 获取 HE3/HE1 与 DAI 的交易对
-    HackerFederationOracle public oracleHE3ToDai = HackerFederationOracle(0x036cc7Ea3a09296f3f7B0019c691decd40D689F4);
-    // 获取 DAI 与 USDT 的交易对
-    HackerFederationOracle public oracleDaiToUsdt = HackerFederationOracle(0xc51aA3f76B1Ab57c50ddBE358B0f7C10e3aDaeFD);
-    // 更新预言机周期
-    uint public constant PERIOD = 2 minutes;
-    // 初始兑换值
-    uint public usdtPerHE3 = 2000000;
+    using SafeMath for uint256;
+
     // 算力小数点位数
-    uint public hashRateDecimals = 5;
+    uint256 public hashRateDecimals = 5;
     // 每 10 usdt = 1 T
-    uint public hashRatePerUsdt = 10;
-    // usdtPerHE3 的小数点位数
-    uint public usdtPerHE3Decimals = 6;
-    // 对应 oracleHE3ToDai 预言机的 blockTimestampLast
-    uint  public OracleHE3ToDaiBlockTimestampLast = oracleHE3ToDai.blockTimestampLast();
-    // 对应 oracleDaiToUsdt 预言机的 blockTimestampLast
-    uint  public OracleDaiToUsdtBlockTimestampLast = oracleDaiToUsdt.blockTimestampLast();
+    uint256 public hashRatePerUsdt = 10;
+    // daiPerHe3 的小数点位数
+    uint256 public daiPerHe3Decimals = 6;
     //
     address public owner;
     // 顶点地址
     address public rootAddress = 0x3585762FBFf4b2b7D92Af16b2BCfa90FE3562087;
     // 销毁地址
     address public burnAddress = 0xC206F4CC6ef3C7bD1c3aade977f0A28ac42F3E37;
-    // DAI erc20 代币地址
-    address public daiTokenAddress = 0x87ac13ca508e8Bb9D0DD0411A2289D8f2bFf1E65;
+
+    // dai 对 he3 币对 address
+    address public daiToHe3Address = address(0x00d14573ae0d836f380d143c4923867f36b2aeaa23);
+
+    // Dai erc20 代币地址
+    address public daiTokenAddress = 0xb5e6DfB1dc0f3F2071AB8046D631be64Af37194a;
+    Token tokenDai = Token(daiTokenAddress);
     // HE3 erc20 代币地址
-    address public he3TokenAddress = 0xa1B33bE25f1A186C605a6297Be217c35bf41e8BB;
+    address public he3TokenAddress = 0x3343798856cF418f568C8F9AC5171399147C1c38;
+    Token tokenHe3 = Token(he3TokenAddress);
+
     // HE1 erc20 代币地址
-    address public he1TokenAddress = 0x32356240342D0607937D8e3C82a73c4f5bEbfd41;
+    address public he1TokenAddress = 0xbd7805F93a41191548bd89F1eF5602bb8620449c;
+
     // 用户信息
     struct User {
         address superior;
@@ -233,7 +231,7 @@ function getDaiPerHe3() public view returns (uint) {}
 | -------- | ---------------------------- |
 | uint     | 获取 1 个 he3 兑换多少个 dai |
 
-# HE3 Token 合约(0x33eCeB4eBdF23eB3331D676C52fCf014b4f35f29)
+# HE3 Token 合约(0x3343798856cF418f568C8F9AC5171399147C1c38)
 
 ## 变量
 
@@ -247,7 +245,7 @@ function getDaiPerHe3() public view returns (uint) {}
     // 手续费接收地址
     address public _feeAddress = 0xC5EA2EA8F6428Dc2dBf967E5d30F34E25D7ef5B8;
     // 初始流通代币接收地址
-    address public _initialAddress = 0xe073864581f36e2e86D15987114e7B61c1124F36;
+    address public _initialAddress = 0x34A954e7540858CDF6b4980E259fd24d3E21a5B4;
     // 初始流通代币数量
     uint256 public _initialToken = 1000;
 ```
@@ -357,4 +355,4 @@ function burnFromOwner(uint256 amount) public onlyOwner {}
 | uint256  | he3 token 数量 |
 
 
-# HE1 合约（0x99FFb8fFe9a58aFD1f4D73f91b146a4B76753161）
+# HE1 合约（0xbd7805F93a41191548bd89F1eF5602bb8620449c）

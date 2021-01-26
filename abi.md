@@ -1,4 +1,4 @@
-### 骇客联盟合约 abi（0xB91202E67B133Dc525e6c130c8DD7F026C9c0559）
+### 骇客联盟合约 abi（0x629a33cE67ac63b7d2f668a99fAfd26e5DB8B622）
 
 ```abi
 [
@@ -340,7 +340,7 @@
 ]
 ```
 
-### HE-1 合约 abi（0x99FFb8fFe9a58aFD1f4D73f91b146a4B76753161）
+### HE-1 合约 abi（0xbd7805F93a41191548bd89F1eF5602bb8620449c）
 
 ```abi
 [
@@ -733,7 +733,7 @@
 ]
 ```
 
-### HE-3 合约 abi（0x33eCeB4eBdF23eB3331D676C52fCf014b4f35f29）
+### HE-3 合约 abi（0x629a33cE67ac63b7d2f668a99fAfd26e5DB8B622）
 
 ```abi
 [
