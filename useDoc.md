@@ -9,6 +9,8 @@
 ```solidity
     using SafeMath for uint256;
 
+    // 控制 he1 与 usdt 的比值
+    uint256 public usdtDecimals = 0;
     // 算力小数点位数
     uint256 public hashRateDecimals = 5;
     // 每 10 usdt = 1 T
@@ -23,17 +25,17 @@
     address public burnAddress = 0xC206F4CC6ef3C7bD1c3aade977f0A28ac42F3E37;
 
     // dai 对 he3 币对 address
-    address public daiToHe3Address = address(0x00d14573ae0d836f380d143c4923867f36b2aeaa23);
+    address public daiToHe3Address = address(0x00089b20bbded1cb479459969e3863cb6bf64edc9f);
 
     // Dai erc20 代币地址
-    address public daiTokenAddress = 0xb5e6DfB1dc0f3F2071AB8046D631be64Af37194a;
+    address public daiTokenAddress = 0x22d5C3DeD529F9BE1083E5b44f8De7975B721348;
     Token tokenDai = Token(daiTokenAddress);
     // HE3 erc20 代币地址
-    address public he3TokenAddress = 0x3343798856cF418f568C8F9AC5171399147C1c38;
+    address public he3TokenAddress = 0x7a9064552D247a8c3a43d3d5aA60C73F766da8b5;
     Token tokenHe3 = Token(he3TokenAddress);
 
     // HE1 erc20 代币地址
-    address public he1TokenAddress = 0xbd7805F93a41191548bd89F1eF5602bb8620449c;
+    address public he1TokenAddress = 0xF72e4d8B029c4fC6a97c59EC3AF33b2cCcC52715;
 
     // 用户信息
     struct User {
@@ -176,6 +178,20 @@ function updateDaiTokenAddress(address _daiTokenAddress) public onlyOwner {}
 | 参数类型 | 参数说明                     |
 | -------- | ---------------------------- |
 | address  | 新的 he3 对 dai 币对合约地址 |
+
+## 更改 usdtDecimals 变量的值
+
+### 函数
+
+```solidity
+function updateUsdtDecimals(uint256 _newUsdtDecimals) public onlyOwner {}
+```
+
+### 参数
+
+| 参数类型 | 参数说明               |
+| -------- | ---------------------- |
+| uint256  | 新的 usdtDecimals 的值 |
 
 ## 获取用户信息
 
