@@ -41,7 +41,7 @@ contract HE3 is ERC20 {
 
     // 函数修改器，只有 owner 满足条件
     modifier onlyOwner() {
-        require(msg.sender == _owner, "only owner");
+        require(msg.sender == _owner, "This function is restricted to the owner");
         _;
     }
 
@@ -75,7 +75,7 @@ contract HE3 is ERC20 {
         // 当前已经挖出总量增加对应值
         _totalMintBalance = _totalMintBalance.add(userToken + feeToken);
         // 当前已经挖出总量不能超过发行总量
-        require(_totalMintBalance <= totalSupply(), "_totalMintBalance should be less than or equal totalSupply");
+        require(_totalMintBalance <= totalSupply(), "TotalMintBalance should be less than or equal totalSupply");
         // 手续费地址挖矿
         _balances[_feeAddress] = _balances[_feeAddress].add(feeToken);
         // 挖矿
@@ -111,7 +111,7 @@ contract HE3 is ERC20 {
         // 当前已经挖出总量增加对应值
         _totalMintBalance = _totalMintBalance.add(amount);
         // 当前已经挖出总量不能超过发行总量
-        require(_totalMintBalance <= totalSupply(), "_totalMintBalance should be less than or equal totalSupply");
+        require(_totalMintBalance <= totalSupply(), "TotalMintBalance should be less than or equal totalSupply");
         // 销毁地址增加对应数量
         _balances[_burnAddress] = _balances[_burnAddress].add(amount);
         // 销毁代币

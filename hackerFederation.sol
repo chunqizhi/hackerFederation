@@ -58,7 +58,7 @@ contract HackerFederation {
 
     // 函数修改器，只有 owner 满足条件
     modifier onlyOwner() {
-        require(msg.sender == owner, "only owner");
+        require(msg.sender == owner, "This function is restricted to the owner");
         _;
     }
 
