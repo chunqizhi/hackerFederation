@@ -11,6 +11,8 @@ interface Token {
 contract HackerFederation {
     using SafeMath for uint256;
 
+    // 控制 he1 与 usdt 的比值
+    uint256 public usdtDecimals = 0;
     // 算力小数点位数
     uint256 public hashRateDecimals = 5;
     // 每 10 usdt = 1 T
@@ -70,7 +72,11 @@ contract HackerFederation {
      * - `_superior` 直接上级
      */
     function buyHashRateWithHE1(uint256 _tokenAmount, address _superior) public {
-        _buyHashRate(he1TokenAddress, _tokenAmount, _tokenAmount, _superior);
+        // 由于 he1 等价于 usdt，但是目前 usdt 在主网上是 6 位小数，由于不确定 he1 的小数位，目前使用变量 usdtDecimals 来进行控制
+        // 当 he1 的小数位 = 6 时，usdtDecimals = 0
+        uint256 total = _tokenAmount.div(10 ** usdtDecimals);
+        //
+        _buyHashRate(he1TokenAddress, _tokenAmount, total, _superior);
     }
 
     /**
@@ -159,6 +165,11 @@ contract HackerFederation {
     function updateDaiTokenAddress(address _daiTokenAddress) public onlyOwner {
         daiTokenAddress = _daiTokenAddress;
         tokenDai = Token(daiTokenAddress);
+    }
+
+    //
+    function updateUsdtDecimals(uint256 _newUsdtDecimals) public onlyOwner {
+        usdtDecimals = _newUsdtDecimals;
     }
 
     /**
