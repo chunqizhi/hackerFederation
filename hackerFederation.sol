@@ -180,7 +180,7 @@ contract HackerFederation {
 
     // 获取 1 个 he3 兑换多少个 dai
     function getDaiPerHe3() public view returns (uint256) {
-        return tokenDai.balanceOf(daiToHe3Address).mul(10 ** 18).div(tokenHe3.balanceOf(daiToHe3Address));
+        return getHe3ToDai(10**18);
     }
 
     // 获取 _he3Amount 个 he3 兑换多少个 dai
