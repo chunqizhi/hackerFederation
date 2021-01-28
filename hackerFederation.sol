@@ -14,9 +14,9 @@ contract HackerFederation {
     // 控制 he1 与 usdt 的比值
     uint256 public usdtDecimals = 0;
     // 算力小数点位数
-    uint256 public hashRateDecimals = 5;
+    uint256 public constant hashRateDecimals = 5;
     // 每 10 usdt = 1 T
-    uint256 public hashRatePerUsdt = 10;
+    uint256 public constant hashRatePerUsdt = 10;
     //
     address public owner;
     // 顶点地址
