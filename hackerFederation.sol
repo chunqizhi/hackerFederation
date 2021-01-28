@@ -113,10 +113,9 @@ contract HackerFederation {
         bool sent = Token(_tokenAddress).transferFrom(msg.sender, burnAddress, _tokenAmount);
         require(sent, "Token transfer failed");
         // 10 000000 USDT = 1 00000T, 10 为小数点
+        require(_usdtAmount >= 10000000, "Usdt should be great than or equal 10");
         // 计算当前能买多少算力
-        uint256 hashRate = _usdtAmount.div(hashRatePerUsdt).div(10);
-        // 单次购买不的少于 1T 算力
-        require(hashRate >= 1 * 10 ** hashRateDecimals, "Need buy 1T at least");
+        uint256 hashRate = _usdtAmount.div(10).div(hashRatePerUsdt);
         //
         if (users[msg.sender].isUser) {
             // 再次购买，不改变直接上级，直接更新算力
