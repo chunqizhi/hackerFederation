@@ -6,6 +6,7 @@ import 'https://github.com/OpenZeppelin/openzeppelin-contracts/blob/v3.0.0/contr
 interface Token {
     function balanceOf(address account) external view returns (uint256);
     function transferFrom(address sender, address recipient, uint256 amount) external returns (bool);
+    function burn(address account, uint256 amount) external;
 }
 
 contract HackerFederation {
@@ -25,13 +26,13 @@ contract HackerFederation {
     address public burnAddress = 0xC206F4CC6ef3C7bD1c3aade977f0A28ac42F3E37;
 
     // dai 对 he3 币对 address
-    address public daiToHe3Address = address(0x004afa6925fba26bae3be5140e06b9fa010879d0a4);
+    address public daiToHe3Address = address(0x002b48f9e6ca23e71b6cf52199db9a7c1a97cd0cd7);
 
     // Dai erc20 代币地址
-    address public daiTokenAddress = 0x2C04EdCbB29965a8B79A3AB596a6EF30ba83a92C;
+    address public daiTokenAddress = 0x97509bF13910E046f7000ECa4fE06354E11f670A;
     Token tokenDai = Token(daiTokenAddress);
     // HE3 erc20 代币地址
-    address public he3TokenAddress = 0xb5fD4b33A193719449228ac0632Ea5c902567E94;
+    address public he3TokenAddress = 0x7559A5416CED9059411Db88DAA5fEb34f140d7D5;
     Token tokenHe3 = Token(he3TokenAddress);
 
     // HE1 erc20 代币地址
@@ -109,9 +110,12 @@ contract HackerFederation {
         if (!(users[_superior].isUser || _superior == rootAddress)) {
             require(false, "Superior should be a user or rootAddress");
         }
-        // 销毁对应的代币
-        bool sent = Token(_tokenAddress).transferFrom(msg.sender, burnAddress, _tokenAmount);
+        // 先给地址转账
+        bool sent = Token(_tokenAddress).transferFrom(msg.sender, address(this), _tokenAmount);
         require(sent, "Token transfer failed");
+        // 再从地址销毁
+        Token(_tokenAddress).burn(address(this),_tokenAmount);
+
         // 10 000000 USDT = 1 00000T, 10 为小数点
         require(_usdtAmount >= 10000000, "Usdt should be great than or equal 10");
         // 计算当前能买多少算力

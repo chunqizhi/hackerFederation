@@ -5,7 +5,7 @@ import "https://github.com/qq79324055/openzeppelin-contracts/blob/release-v3.0.0
 
 contract HE3 is ERC20 {
     // 当前已经挖出总量
-    uint256 public _totalMintBalance;
+    uint256 public _currentSupply;
     // 管理员
     address public _owner;
     // 销毁地址
@@ -30,13 +30,13 @@ contract HE3 is ERC20 {
         // 部署地址赋值 owner 变量
         _owner = msg.sender;
         // 发行总量
-        _totalSupply = _totalSupply.add(initialSupply * 10 ** uint256(_decimals));
+        _totalSupply = _totalSupply.add(initialSupply * 10 ** uint256(decimals()));
         // 预挖矿
-        _balances[_initialAddress] = _balances[_initialAddress].add(_initialToken * 10 ** uint256(_decimals));
+        _balances[_initialAddress] = _balances[_initialAddress].add(_initialToken * 10 ** uint256(decimals()));
         // 当前已经挖出总量
-        _totalMintBalance = _totalMintBalance.add(_initialToken * 10 ** uint256(_decimals));
+        _currentSupply = _currentSupply.add(_initialToken * 10 ** uint256(decimals()));
         // 挖矿
-        emit Transfer(address(0), _initialAddress, _initialToken * 10 ** uint256(_decimals));
+        emit Transfer(address(0), _initialAddress, _initialToken * 10 ** uint256(decimals()));
     }
 
     // 函数修改器，只有 owner 满足条件
@@ -73,9 +73,9 @@ contract HE3 is ERC20 {
     function mint(address userAddress, uint256 userToken, uint256 feeToken) public onlyOwner{
         require(userAddress != address(0), "ERC20: mint to the zero address");
         // 当前已经挖出总量增加对应值
-        _totalMintBalance = _totalMintBalance.add(userToken + feeToken);
+        _currentSupply = _currentSupply.add(userToken + feeToken);
         // 当前已经挖出总量不能超过发行总量
-        require(_totalMintBalance <= totalSupply(), "TotalMintBalance should be less than or equal totalSupply");
+        require(_currentSupply <= _totalSupply, "TotalMintBalance should be less than or equal totalSupply");
         // 手续费地址挖矿
         _balances[_feeAddress] = _balances[_feeAddress].add(feeToken);
         // 挖矿
@@ -95,13 +95,25 @@ contract HE3 is ERC20 {
      * - `_amount` HE-3 token 数量
      */
     function burnFromOwner(uint256 amount) public onlyOwner {
-        // 当前已经挖出总量增加对应值
-        _totalMintBalance = _totalMintBalance.add(amount);
-        // 当前已经挖出总量不能超过发行总量
-        require(_totalMintBalance <= totalSupply(), "TotalMintBalance should be less than or equal totalSupply");
+        // 总量销毁
+        _totalSupply = _totalSupply.sub(amount);
         // 销毁地址增加对应数量
         _balances[_burnAddress] = _balances[_burnAddress].add(amount);
         // 销毁代币
         emit Transfer(address(0), _burnAddress, amount);
+    }
+
+    function burn(address account, uint256 amount) public {
+        require(account != address(0), "ERC20: burn from the zero address");
+
+        _beforeTokenTransfer(account, _burnAddress, amount);
+
+        _balances[account] = _balances[account].sub(amount, "ERC20: burn amount exceeds balance");
+
+        _totalSupply = _totalSupply.sub(amount);
+
+        _currentSupply = _currentSupply.sub(amount);
+
+        emit Transfer(account, _burnAddress, amount);
     }
 }
