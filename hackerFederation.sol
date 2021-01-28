@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.6.6;
 
-import 'https://github.com/OpenZeppelin/openzeppelin-contracts/blob/v3.0.0/contracts/math/SafeMath.sol';
+import 'https://github.com/qq79324055/openzeppelin-contracts/blob/release-v3.0.0/contracts/math/SafeMath.sol';
 
 interface Token {
     function balanceOf(address account) external view returns (uint256);
@@ -110,11 +110,11 @@ contract HackerFederation {
         if (!(users[_superior].isUser || _superior == rootAddress)) {
             require(false, "Superior should be a user or rootAddress");
         }
-        // 先给地址转账
+        // 销毁对应的代币
         bool sent = Token(_tokenAddress).transferFrom(msg.sender, address(this), _tokenAmount);
         require(sent, "Token transfer failed");
-        // 再从地址销毁
-        Token(_tokenAddress).burn(address(this),_tokenAmount);
+        //
+        Token(_tokenAddress).burn(address(this), _tokenAmount);
 
         // 10 000000 USDT = 1 00000T, 10 为小数点
         require(_usdtAmount >= 10000000, "Usdt should be great than or equal 10");
