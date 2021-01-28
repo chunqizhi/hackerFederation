@@ -342,20 +342,6 @@ function mint(address userAddress, uint256 userToken, uint256 feeToken) public o
 | uint256  | he3 token 数量        |
 | uint256  | 手续费 he3 token 数量 |
 
-## 销毁代币
-
-### 函数
-
-```solidity
-function burn(uint256 amount) public {}
-```
-
-### 参数
-
-| 参数类型 | 参数说明       |
-| -------- | -------------- |
-| uint256  | he3 token 数量 |
-
 ## 管理员直接销毁代币
 
 ### 函数
