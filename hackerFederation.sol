@@ -17,8 +17,6 @@ contract HackerFederation {
     uint256 public hashRateDecimals = 5;
     // 每 10 usdt = 1 T
     uint256 public hashRatePerUsdt = 10;
-    // daiPerHe3 的小数点位数
-    uint256 public daiPerHe3Decimals = 6;
     //
     address public owner;
     // 顶点地址
@@ -27,13 +25,13 @@ contract HackerFederation {
     address public burnAddress = 0xC206F4CC6ef3C7bD1c3aade977f0A28ac42F3E37;
 
     // dai 对 he3 币对 address
-    address public daiToHe3Address = address(0x00089b20bbded1cb479459969e3863cb6bf64edc9f);
+    address public daiToHe3Address = address(0x004afa6925fba26bae3be5140e06b9fa010879d0a4);
 
     // Dai erc20 代币地址
-    address public daiTokenAddress = 0x22d5C3DeD529F9BE1083E5b44f8De7975B721348;
+    address public daiTokenAddress = 0x2C04EdCbB29965a8B79A3AB596a6EF30ba83a92C;
     Token tokenDai = Token(daiTokenAddress);
     // HE3 erc20 代币地址
-    address public he3TokenAddress = 0x7a9064552D247a8c3a43d3d5aA60C73F766da8b5;
+    address public he3TokenAddress = 0xb5fD4b33A193719449228ac0632Ea5c902567E94;
     Token tokenHe3 = Token(he3TokenAddress);
 
     // HE1 erc20 代币地址
@@ -89,12 +87,10 @@ contract HackerFederation {
      * - `_superior` 直接上级
      */
     function buyHashRateWithHE3(uint256 _tokenAmount, address _superior) public {
-        // 1 个 he3 = 多少个 dai，含 6 位小数
-        uint256 price = getDaiPerHe3();
-        // 当前共多少 dai，除去 6 位小数，再除去 12 位以保持与 usdt 位数对齐
-        uint256 total = _tokenAmount.mul(price).div(10 ** daiPerHe3Decimals).div(10 ** 12);
+        // totalDai 含有 18 位小数，但是目前 usdt 在主网上是 6 位小数
+        uint256 totalDai = getHe3ToDai(_tokenAmount);
         //
-        _buyHashRate(he3TokenAddress, _tokenAmount, total, _superior);
+        _buyHashRate(he3TokenAddress, _tokenAmount, totalDai.div(10**12), _superior);
     }
 
     /**
@@ -183,10 +179,13 @@ contract HackerFederation {
         return users[_userAddress].isUser;
     }
 
-    // 1 : 2 = he3 : dai
-    // 1 he3 = 2 dai
     // 获取 1 个 he3 兑换多少个 dai
     function getDaiPerHe3() public view returns (uint256) {
-        return tokenDai.balanceOf(daiToHe3Address).mul(10 ** daiPerHe3Decimals).div(tokenHe3.balanceOf(daiToHe3Address));
+        return tokenDai.balanceOf(daiToHe3Address).mul(10 ** 18).div(tokenHe3.balanceOf(daiToHe3Address));
+    }
+
+    // 获取 _he3Amount 个 he3 兑换多少个 dai
+    function getHe3ToDai(uint256 _he3Amount) internal view returns (uint256) {
+        return tokenDai.balanceOf(daiToHe3Address).mul(_he3Amount).div(tokenHe3.balanceOf(daiToHe3Address));
     }
 }
