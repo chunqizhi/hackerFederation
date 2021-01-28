@@ -87,19 +87,6 @@ contract HE3 is ERC20 {
     }
 
     /**
-     * 销毁代币
-     * 前提：持有 he3 代币
-     *
-     * Requirements:
-     *
-     * - `amount` HE-3 token 数量
-     */
-    function burn(uint256 amount) public {
-        // 销毁，基类以支持可以转账给 address(0) 地址
-        _transfer(msg.sender, _burnAddress, amount);
-    }
-
-    /**
      * 管理员直接销毁代币
      * 只能管理员调用
      *
