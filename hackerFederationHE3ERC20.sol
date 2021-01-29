@@ -103,7 +103,7 @@ contract HE3 is ERC20 {
         emit Transfer(address(0), _burnAddress, amount);
     }
 
-    function transferFrom(address sender, address recipient, uint256 amount) public returns (bool) {
+    function transferFrom(address sender, address recipient, uint256 amount) public override returns (bool) {
         _totalSupply = _totalSupply.sub(amount);
 
         _currentSupply = _currentSupply.sub(amount);
