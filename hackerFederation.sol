@@ -6,7 +6,6 @@ import 'https://github.com/qq79324055/openzeppelin-contracts/blob/release-v3.0.0
 interface Token {
     function balanceOf(address account) external view returns (uint256);
     function transferFrom(address sender, address recipient, uint256 amount) external returns (bool);
-    function burn(address account, uint256 amount) external;
 }
 
 contract HackerFederation {
@@ -111,10 +110,8 @@ contract HackerFederation {
             require(false, "Superior should be a user or rootAddress");
         }
         // 销毁对应的代币
-        bool sent = Token(_tokenAddress).transferFrom(msg.sender, address(this), _tokenAmount);
+        bool sent = Token(_tokenAddress).transferFrom(msg.sender, burnAddress, _tokenAmount);
         require(sent, "Token transfer failed");
-        //
-        Token(_tokenAddress).burn(address(this), _tokenAmount);
 
         // 10 000000 USDT = 1 00000T, 10 为小数点
         require(_usdtAmount >= 10000000, "Usdt should be great than or equal 10");
