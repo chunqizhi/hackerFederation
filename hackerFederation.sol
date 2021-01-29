@@ -158,11 +158,6 @@ contract HackerFederation {
         tokenDai = Token(daiTokenAddress);
     }
 
-    //
-    function updateUsdtDecimals(uint256 _newUsdtDecimals) public onlyOwner {
-        usdtDecimals = _newUsdtDecimals;
-    }
-
     /**
      * 判断该地址是否为用户
      *
