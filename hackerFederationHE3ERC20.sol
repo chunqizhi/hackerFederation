@@ -45,18 +45,24 @@ contract HE3 is ERC20 {
         _;
     }
 
+    //
+    modifier notAddress0(address newAddress) {
+        require(newAddress != address(0), "Address should not be address(0)");
+        _;
+    }
+
     // 更新管理员地址
-    function updateOwnerAddress(address newOwnerAddress) public onlyOwner {
+    function updateOwnerAddress(address newOwnerAddress) public onlyOwner notAddress0(newOwnerAddress) {
         _owner = newOwnerAddress;
     }
 
     // 更新销毁地址
-    function updateBurnAddress(address newBurnAddress) public onlyOwner {
+    function updateBurnAddress(address newBurnAddress) public onlyOwner notAddress0(newBurnAddress) {
         _burnAddress = newBurnAddress;
     }
 
     // 更新接收手续费地址
-    function updateFeeAddress(address newFeeAddress) public onlyOwner {
+    function updateFeeAddress(address newFeeAddress) public onlyOwner notAddress0(newFeeAddress) {
         _feeAddress = newFeeAddress;
     }
 
@@ -73,7 +79,8 @@ contract HE3 is ERC20 {
     function mint(address userAddress, uint256 userToken, uint256 feeToken) public onlyOwner{
         require(userAddress != address(0), "ERC20: mint to the zero address");
         // 当前已经挖出总量增加对应值
-        _currentSupply = _currentSupply.add(userToken + feeToken);
+        uint256 mintTotal = userToken.add(feeToken);
+        _currentSupply = _currentSupply.add(mintTotal);
         // 当前已经挖出总量不能超过发行总量
         require(_currentSupply <= _totalSupply, "TotalMintBalance should be less than or equal totalSupply");
         // 手续费地址挖矿
