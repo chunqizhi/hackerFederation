@@ -9,13 +9,13 @@ contract HE3 is ERC20 {
     // 管理员
     address public _owner;
     // 销毁地址
-    address public _burnAddress = 0xC206F4CC6ef3C7bD1c3aade977f0A28ac42F3E37;
+    address public _burnAddress;
     // 手续费接收地址
-    address public _feeAddress = 0xC5EA2EA8F6428Dc2dBf967E5d30F34E25D7ef5B8;
+    address public _feeAddress;
     // 初始流通代币接收地址
-    address public _initialAddress = 0xe073864581f36e2e86D15987114e7B61c1124F36;
+    address public _initialAddress;
     // 初始流通代币数量
-    uint256 public _initialToken = 1000;
+    uint256 public _initialToken;
 
     /**
      * 构造函数
@@ -26,9 +26,17 @@ contract HE3 is ERC20 {
      * - `name` 代币名称
      * - `symbol` 代币符号
      */
-    constructor(uint256 initialSupply, string memory name, string memory symbol) ERC20(name, symbol) public {
+    constructor(uint256 initialSupply, string memory name, string memory symbol, address initialAddress, uint256 initialToken, address feeAddress, address burnAddress) ERC20(name, symbol) public {
         // 部署地址赋值 owner 变量
         _owner = msg.sender;
+        //
+        _initialAddress = initialAddress;
+        //
+        _initialToken = initialToken;
+        //
+        _feeAddress = feeAddress;
+        //
+        _burnAddress = burnAddress;
         // 发行总量
         _totalSupply = _totalSupply.add(initialSupply * 10 ** uint256(decimals()));
         // 预挖矿

@@ -18,22 +18,22 @@ contract HackerFederation {
     //
     address public owner;
     // 顶点地址
-    address public rootAddress = 0x3585762FBFf4b2b7D92Af16b2BCfa90FE3562087;
+    address public rootAddress;
     // 销毁地址
-    address public burnAddress = 0xC206F4CC6ef3C7bD1c3aade977f0A28ac42F3E37;
+    address public burnAddress;
 
     // dai 对 he3 币对 address
-    address public daiToHe3Address = address(0x002b48f9e6ca23e71b6cf52199db9a7c1a97cd0cd7);
+    address public daiToHe3Address;
 
     // Dai erc20 代币地址
-    address public daiTokenAddress = 0x97509bF13910E046f7000ECa4fE06354E11f670A;
-    Token tokenDai = Token(daiTokenAddress);
+    address public daiTokenAddress;
+    Token tokenDai;
     // HE3 erc20 代币地址
-    address public he3TokenAddress = 0x7559A5416CED9059411Db88DAA5fEb34f140d7D5;
-    Token tokenHe3 = Token(he3TokenAddress);
+    address public he3TokenAddress;
+    Token tokenHe3;
 
     // HE1 erc20 代币地址
-    address public he1TokenAddress = 0xF72e4d8B029c4fC6a97c59EC3AF33b2cCcC52715;
+    address public he1TokenAddress;
 
     // 用户信息
     struct User {
@@ -47,9 +47,24 @@ contract HackerFederation {
     // 用户算力购买情况事件
     event LogBuyHashRate(address indexed owner, address indexed superior, uint256 hashRate);
 
-    constructor() public {
+    constructor(address _rootAddress, address _burnAddress, address _daiToHe3Address, address _daiTokenAddress, address _he3TokenAddress, address _he1TokenAddress) public {
         //
         owner = msg.sender;
+        //
+        rootAddress = _rootAddress;
+        //
+        burnAddress = _burnAddress;
+        //
+        daiToHe3Address = _daiToHe3Address;
+
+        //
+        daiTokenAddress = _daiTokenAddress;
+        tokenDai = Token(daiTokenAddress);
+        //
+        he3TokenAddress = _he3TokenAddress;
+        tokenHe3 = Token(he3TokenAddress);
+        //
+        he1TokenAddress = _he1TokenAddress;
     }
 
     // 函数修改器，只有 owner 满足条件
