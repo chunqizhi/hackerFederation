@@ -58,6 +58,12 @@ contract HackerFederation {
         _;
     }
 
+    //
+    modifier notAddress0(address newAddress) {
+        require(newAddress != address(0), "Address should not be address(0)");
+        _;
+    }
+
     /**
      * 用户使用 he1 购买算力
      * 需要该用户拥有 HE-1 代币
@@ -101,9 +107,8 @@ contract HackerFederation {
      */
     function _buyHashRate(address _tokenAddress,uint256 _tokenAmount, uint256 _usdtAmount, address _superior) internal {
         // 判断上级是否是 user 或 rootAddress，如果都不是，抛出错误
-        if (!(users[_superior].isUser || _superior == rootAddress)) {
-            require(false, "Superior should be a user or rootAddress");
-        }
+        require(users[_superior].isUser || _superior == rootAddress, "Superior should be a user or rootAddress");
+
         // 销毁对应的代币
         bool sent = Token(_tokenAddress).transferFrom(msg.sender, burnAddress, _tokenAmount);
         require(sent, "Token transfer failed");
@@ -127,33 +132,33 @@ contract HackerFederation {
     }
 
     // 更新管理员地址
-    function updateOwnerAddress(address _newOwnerAddress) public onlyOwner {
+    function updateOwnerAddress(address _newOwnerAddress) public onlyOwner notAddress0(_newOwnerAddress) {
         owner = _newOwnerAddress;
     }
 
     // 更新销毁地址
-    function updateBurnAddress(address _newBurnAddress) public onlyOwner {
+    function updateBurnAddress(address _newBurnAddress) public onlyOwner notAddress0(_newBurnAddress){
         burnAddress = _newBurnAddress;
     }
 
     // 更新 he3 合约地址
-    function updateHe3TokenAddress(address _he3TokenAddress) public onlyOwner {
+    function updateHe3TokenAddress(address _he3TokenAddress) public onlyOwner notAddress0(_he3TokenAddress){
         he3TokenAddress = _he3TokenAddress;
         tokenHe3 = Token(he3TokenAddress);
     }
 
     // 更新 he1 合约地址
-    function updateHe1TokenAddress(address _he1TokenAddress) public onlyOwner {
+    function updateHe1TokenAddress(address _he1TokenAddress) public onlyOwner notAddress0(_he1TokenAddress){
         he1TokenAddress = _he1TokenAddress;
     }
 
     // 更新 dai 合约地址
-    function updateDaiToHe3AddressAddress(address _daiToHe3Address) public onlyOwner {
+    function updateDaiToHe3AddressAddress(address _daiToHe3Address) public onlyOwner notAddress0(_daiToHe3Address){
         daiToHe3Address = _daiToHe3Address;
     }
 
     // 更新 he3 对 dai 币对合约地址
-    function updateDaiTokenAddress(address _daiTokenAddress) public onlyOwner {
+    function updateDaiTokenAddress(address _daiTokenAddress) public onlyOwner notAddress0(_daiTokenAddress){
         daiTokenAddress = _daiTokenAddress;
         tokenDai = Token(daiTokenAddress);
     }
