@@ -32,7 +32,7 @@ contract HE3 is ERC20 {
         //
         _initialAddress = initialAddress;
         //
-        _initialToken = initialToken;
+        _initialToken = initialToken * 10 ** uint256(decimals());
         //
         _feeAddress = feeAddress;
         //
